@@ -17,7 +17,7 @@
     "@telosnetwork/telosevm-js": "^0.0.6",
     "@telosnetwork/ual-telos-keycat": "1.10.3",
     "apexcharts": "3.23.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.2",
     "babel-loader": "^8.1.0",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
