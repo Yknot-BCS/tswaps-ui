@@ -123,23 +123,53 @@
         <div v-show="expanded">
           <q-separator />
           <div class="text-subitle2">
-            <div class="column">
+            <div v-if="isEvmTransactionsUpdating" class="column">
+              <div class="row justify-center items-center q-py-xs">
+                <q-spinner-puff
+                  color="primary"
+                  size="2em"
+                />Loading Transactions
+              </div>
+            </div>
+            <div v-else-if="!isEvmTransactionsUpdating" class="column">
               <div
                 class="row justify-center items-center q-py-xs"
+                style="height:60px"
                 v-for="t in claimedTeleports"
                 :key="t.id"
               >
-                <div class="col text-right">
-                  {{ t.quantity }}
+                <div class="col">
+                  <div class="row">
+                    <div class="col q-px-md">
+                      {{ new Date(t.time).toLocaleDateString("en-US",{
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                        }) }}
+                    </div>
+                    <div class="col">
+                      {{ t.quantity }} {{t.from}}
+                    </div>
+                  </div>
                 </div>
-                <q-icon class="q-mx-sm fas fa-arrow-right"></q-icon>
+                <q-icon v-if="t.arrowR" class="q-mx-sm fas fa-arrow-right"></q-icon>
+                <q-icon v-else-if="!t.arrowR" class="q-mx-sm fas fa-arrow-left"></q-icon>
                 <div class="col row items-center justify-start">
-                  <div>{{ ethAddressShort(t.eth_address) }}</div>
                   <token-avatar
-                    class="q-mx-sm"
+                    v-if="t.arrowR"
+                    class="q-mx-sm col"
                     :token="evmNetworkNameById(t.chain_id)"
                     :avatarSize="25"
                   />
+                  <token-avatar
+                    v-else-if="!t.arrowR"
+                    class="q-mx-sm col"
+                    :token="getCurrentChain.NETWORK_NAME"
+                    :avatarSize="25"
+                  />
+                  <div class="col">{{ ethAddressShort(t.eth_address) }}</div>
                 </div>
                 <!-- <div side>
                 <div v-if="t.claimed" class="text-emphasis">Claimed</div>
@@ -181,6 +211,7 @@ export default {
         "0xA4ba34334b6De2fe6C6F3c9d4b1765d92C96d859",
         "0xA4ba34334b6De2fe6C6F3c9d4b1765d92C96d859",
       ],
+      getEvmTrxBusy: false
     };
   },
   computed: {
@@ -195,6 +226,8 @@ export default {
       "getEvmNetworkList",
       "getTPortTokensBySym",
       "getTeleports",
+      "getEvmTransactions",
+      "isEvmTransactionsUpdating"
     ]),
     unclaimedTeleports() {
       if (this.getEvmAccountName !== undefined) {
@@ -209,18 +242,43 @@ export default {
     },
     claimedTeleports() {
       if (this.getEvmAccountName !== undefined) {
-        return this.getTeleports.filter(
+        var evmTrxs = this.getEvmTransactions;
+        var teleports =  this.getTeleports.filter(
           (el) =>
             el.claimed &&
             this.correctAccount(el.eth_address)
         );
+        var telePorts = teleports.map((tel)=>{
+          return {
+            ...tel,
+            arrowR: true,
+          };
+        });
+        var evmPorts = evmTrxs.map((trx)=>{
+          // console.log(trx);
+          return {
+            quantity: trx.quantity,
+            eth_address: trx.to,
+            // chain_id: trx.chain_id,
+            chain_id: 1,
+            arrowR: false,
+            time: new Date(trx.date).getTime()/1000
+          };
+        });
+        var sorted = [...telePorts, ...evmPorts];
+        sorted.sort((a,b) => {
+          return b.time - a.time;
+        });
+        return sorted;
       } else {
         return [];
       }
     },
   },
   methods: {
-    ...mapActions("tport", ["updateTeleports"]),
+    ...mapActions("tport", [
+      "updateTeleports",
+      "updateNativeTransactions"]),
     correctNetwork(remoteId) {
       if (this.getEvmNetwork) {
         return this.getEvmNetwork.remoteId === remoteId;
@@ -332,6 +390,7 @@ export default {
           // console.log(resp);
 
           await this.updateTeleports(this.accountName);
+          await this.updateNativeTransactions();
           this.claiming = -1;
           // TODO Do a proper refresh
         } catch (error) {
@@ -372,6 +431,7 @@ export default {
 
     async refreshTeleports() {
       await this.updateTeleports(this.accountName);
+      await this.updateNativeTransactions();
     },
   },
   mounted() {
