@@ -1,6 +1,5 @@
 <template>
-  <div v-if="graphData.length > 0">
-    <div class="text-h5 row q-my-md">Price of swap</div>
+  <div v-if="graphData.length > 0" class="gt-xs">
     <div class="row justify-center swapCard q-my-md inputCard">
       <!-- Daily-Weekly-Monthly Options radio buttons cntainer starts here -->
       <div class="options q-my-md justify-center row">
@@ -33,7 +32,9 @@
         <label class="option-label" for="month">Monthly</label>
       </div>
       <!-- Daily-Weekly-Monthly Options radio buttons cntainer ends here -->
-      <GChart type="AreaChart" :options="options" :data="graphData" />
+      <q-card class="priceCard q-pa-sm" flat>
+        <GChart type="AreaChart" :options="options" :data="graphData" />
+      </q-card>
       <!-- <div v-if="!loaded" class="lds-dual-ring"></div>   -->
     </div>
   </div>
@@ -59,7 +60,7 @@ export default {
       graphData: [],
       currentServerTime: null,
       options: {
-        width: 600,
+        width: 580,
         height: 500,
         backgroundColor: '#23195e',
         chartArea: {
@@ -107,7 +108,6 @@ export default {
           maxZoomOut: 1,
         },
         dataOpacity: 0.3,
-        title: 'Comparison',
         titleTextStyle: {
           color: 'white',
         },
@@ -131,7 +131,7 @@ export default {
       return `${this.getFromToken?.symbol}|${this.getToToken?.symbol}`;
     },
     graphHeaders() {
-      return ['Time', `${this.fromTokenSymbol}\\${this.toTokenSymbol}`];
+      return ['Time', `${this.fromTokenSymbol}\/${this.toTokenSymbol}`];
     },
   },
   methods: {
@@ -235,7 +235,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .options {
   position: relative;
   width: 300px;
@@ -258,5 +258,10 @@ input:checked + label {
 }
 label {
   cursor: pointer;
+}
+.priceCard {
+  background: #23195e;
+  border-radius: 30px;
+  color: $white;
 }
 </style>
