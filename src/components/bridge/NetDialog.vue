@@ -61,7 +61,9 @@ export default {
             el.NETWORK_NAME === this.getCurrentChain.NETWORK_NAME
         );
       } else {
-        return this.getAllPossibleChains;
+          return this.getAllPossibleChains.filter((el)=>{
+            return el.NETWORK_NAME !== this.getToChain.NETWORK_NAME && el.NETWORK_NAME !== this.getFromChain.NETWORK_NAME
+          });
       }
     },
   },
@@ -75,13 +77,13 @@ export default {
         this.isFrom &&
         this.getFromChain.NETWORK_NAME !== chain.NETWORK_NAME
       ) {
-        this.updateToChain(this.getFromChain);
+        // this.updateToChain(this.getFromChain);
         this.updateFromChain(chain);
       } else if (
         !this.isFrom &&
         this.getToChain.NETWORK_NAME !== chain.NETWORK_NAME
       ) {
-        this.updateFromChain(this.getToChain);
+        // this.updateFromChain(this.getToChain);
         this.updateToChain(chain);
       }
       this.$emit("update:showNetDialog", false);

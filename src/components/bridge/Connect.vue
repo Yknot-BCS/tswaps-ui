@@ -13,6 +13,7 @@
       </div>
       <div class="col-sm-4 col-xs-12">
         <div class="row justify-center">
+          <!-- Connect to EVM wallet with metamask: -->
           <q-btn
             v-if="
               (!getEvmAccountName || getEvmAccountName === '') && !this.isNative
@@ -28,8 +29,9 @@
             no-shadow
             no-caps
           />
+          <!-- Connect to telos wallet with ual -->
           <q-btn
-            v-else-if="!this.isAuthenticated && this.isNative"
+            v-else-if="!this.isAuthenticated && this.isNativeAndTelos"
             label="CONNECT WALLET"
             @click="showLogin = !showLogin"
             class="hover-accent"
@@ -38,14 +40,27 @@
             no-shadow
             no-caps
           />
+          <!-- Connect to EOS and WAX wallet with ual -->
+          <q-btn
+            v-else-if="this.isNative && !this.isNativeAndTelos && getEvmAccountName == ''"
+            label="CONNECT WALLET"
+            @click="connectToEosWax"
+            class="hover-accent"
+            color="positive"
+            outline
+            no-shadow
+            no-caps
+          />
+          <!-- Disconnect from telos with ual -->
           <div
             class="evm-account col ellipsis cursor-pointer bordered text-center"
             style="max-width: 200px"
-            v-else-if="this.isAuthenticated && this.isNative"
+            v-else-if="this.isAuthenticated && this.isNativeAndTelos"
             @click="logout"
           >
             Disconnect
           </div>
+          <!-- disconnect from EVM in vuex -->
           <div
             class="evm-account col ellipsis cursor-pointer bordered text-center"
             style="max-width: 200px"
@@ -138,6 +153,10 @@ export default {
       } else return true;
     },
 
+    isNativeAndTelos() {
+      return (this.isNative && this.selectedNetwork === "TELOS");
+    }
+
     // shortEvmAccount() {
     //   const address = this.getEvmAccountName;
     //   if (address.length > 0) {
@@ -148,6 +167,7 @@ export default {
   methods: {
     ...mapActions("account", ["setWalletBalances", "logout"]),
     ...mapActions("tport", ["setAccountName", "updateTportTokenBalances"]),
+    ...mapActions("blockchains",["updateCurrentChain"]),
 
     // changeNetwork(network) {
     //   this.$emit("update:selectedNetwork", network);
@@ -279,6 +299,9 @@ export default {
     setEthAccountName() {
       this.$store.commit("tport/setAccountName", { accountName: "" });
     },
+    connectToEosWax() {
+      this.showLogin = !this.showLogin;
+    }
   },
   async mounted() {
     this.updateBalance();

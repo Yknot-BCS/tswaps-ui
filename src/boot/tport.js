@@ -72,6 +72,20 @@ const testnetList = [
     blockExplorerUrls: ["https://testnet.telos.net/v2/explore/evm/"],
     vaultContract: "",
   },
+  {
+    name: "EOS",
+    remoteId: 3,
+    chainName: "Jungle3 EOS Testnet",
+    chainId: "2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840",
+    rpcUrls: ["https://jungle3.cryptolions.io:443"],
+    nativeCurrency: {
+      name: "EOS",
+      symbol: "EOS",
+      decimals: 18,
+    },
+    blockExplorerUrls: ["https://jungle3.cryptolions.io:443"],
+    vaultContract: "",
+  },
 ];
 
 export default async ({ store }) => {

@@ -194,7 +194,7 @@ export default {
     // await this.updatePools();
     // await this.updateAllTokensBalances(this.accountName);
     await this.updateTPortTokens();
-    this.getToNative
+    !(["TELOS", "EOS", "WAX"].includes(this.getFromChain.NETWORK_NAME))
       ? this.updateTportTokenBalancesEvm()
       : this.updateTportTokenBalances();
   },

@@ -332,8 +332,16 @@ export default {
     },
 
     isNative(isFrom) {
-      if (isFrom) return this.getFromChain.NETWORK_NAME == "TELOS";
-      else return this.getToChain.NETWORK_NAME == "TELOS";
+      if (isFrom) return (
+          this.getFromChain.NETWORK_NAME == "TELOS" ||
+          this.getFromChain.NETWORK_NAME == "EOS" ||
+          this.getFromChain.NETWORK_NAME == "WAX"
+        );
+      else return (
+          this.getToChain.NETWORK_NAME == "TELOS" ||
+          this.getToChain.NETWORK_NAME == "EOS" ||
+          this.getToChain.NETWORK_NAME == "WAX"
+        );
     },
 
     isWalletsConnected() {
@@ -354,7 +362,7 @@ export default {
 
     handleNext() {
       if (this.step === 1 && this.isWalletsConnected()) {
-        this.getToNative
+        !this.isNative(true)
           ? this.updateTportTokenBalancesEvm()
           : this.updateTportTokenBalances();
         this.$refs.stepper.next();
@@ -400,7 +408,7 @@ export default {
             message: "Error: Cancelled by user",
           });
         }
-        
+
       } catch (error) {
         this.$errorNotification(error);
       }
@@ -421,7 +429,7 @@ export default {
     this.reloadWallet(this.accountName);
     this.updateTPortTokens();
     this.updateTeleports(this.accountName);
-    this.getToNative
+    !this.isNative(true)
       ? this.updateTportTokenBalancesEvm()
       : this.updateTportTokenBalances();
     this.$store.commit("bridge/setFromChain", this.getAllPossibleChains[0]);
@@ -447,7 +455,7 @@ export default {
 .bridgeStepper {
   width: 700px;
   max-width: 95vw;
-  border-radius: 50px !important; 
+  border-radius: 50px !important;
 }
 .bridgeButton {
   color: white;

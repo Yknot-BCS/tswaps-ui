@@ -8,8 +8,11 @@ export const login = async function (
   try {
     commit("setLoadingWallet", authenticator.getStyle().text);
     await authenticator.init();
+    console.log(account);
     if (!account) {
+      console.log("Here");
       const requestAccount = await authenticator.shouldRequestAccountName();
+      console.log(requestAccount);
       if (requestAccount) {
         await dispatch("fetchAvailableAccounts", idx);
         commit("setRequestAccount", true);
@@ -17,15 +20,17 @@ export const login = async function (
       }
     }
     const users = await authenticator.login(account);
+    console.log(users);
     if (users.length) {
       const account = users[0];
       const accountName = await account.getAccountName();
       this.$ualUser = account;
       this.$type = "ual";
       commit("setAccountName", accountName);
-      localStorage.setItem("autoLogin", authenticator.constructor.name);
-      localStorage.setItem("account", accountName);
-      localStorage.setItem("returning", true);
+      await authenticator.logout();
+      // localStorage.setItem("autoLogin", authenticator.constructor.name);
+      // localStorage.setItem("account", accountName);
+      // localStorage.setItem("returning", true);
       // dispatch("getAccountProfile");
     }
   } catch (e) {
@@ -35,6 +40,8 @@ export const login = async function (
       e.reason;
     commit("general/setErrorMsg", error, { root: true });
     console.log("Login error: ", error);
+    console.log("Clear local:");
+    localStorage.clear();
   } finally {
     commit("setLoadingWallet");
   }

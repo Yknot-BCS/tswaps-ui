@@ -35,11 +35,11 @@ export default async ({ Vue, store }) => {
   // }
 
   // if wax network, include 'wax cloud wallet' as login option
-  if (getCurrentChain.NETWORK_NAME === "WAX") {
-    authenticators = authenticators.concat([
-      new Wax([chain], { appName: process.env.APP_NAME }),
-    ]);
-  }
+  // if (getCurrentChain.NETWORK_NAME === "WAX") {
+  //   authenticators = authenticators.concat([
+  //     new Wax([chain], { appName: process.env.APP_NAME }),
+  //   ]);
+  // }
 
   authenticators = authenticators.concat([
     new Anchor([chain], { appName: process.env.APP_NAME }),
