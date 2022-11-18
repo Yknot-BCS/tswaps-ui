@@ -5,6 +5,10 @@ export const formatPoolList = function ({ commit, rootGetters }, rows) {
 
   if (rows) {
     for (const pool of rows) {
+      const poolBlacklist = JSON.parse(process.env.POOL_BLACKLIST);
+      if (poolBlacklist.includes(pool.id)) {
+        continue;
+      }
       let res0 = pool.reserve0;
       let res1 = pool.reserve1;
 
@@ -410,8 +414,8 @@ export const updateUserLiquidityPools = async function (
             userPools.push({
               ...temp_pool,
               lpBalance: lpBalance,
-              lpDeltaCost0: token.cost0,
-              lpDeltaCost1: token.cost1,
+              lpOldCost0: token.cost0,
+              lpOldCost1: token.cost1,
               lpCurrentCost0: currentCost0,
               lpCurrentCost1: currentCost1,
             });

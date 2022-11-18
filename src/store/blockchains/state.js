@@ -7,12 +7,11 @@ export default function () {
       TEST_NETWORK: true,
       NETWORK_CHAIN_ID:
         "1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f",
-      NETWORK_HOST: "testnet.telos.caleos.io",
-      // NETWORK_HOST: "testnet.telos.africa",
+      NETWORK_HOST: "testnet.telos.net",
       NETWORK_PORT: 443,
       NETWORK_PROTOCOL: "https",
       NETWORK_EXPLORER: "https://eosauthority.com",
-      HYPERION_ENDPOINT: "https://testnet.telos.caleos.io",
+      HYPERION_ENDPOINT: "https://testnet.telos.net",
       CREATE_ACCOUNT: "https://app.telos.net/testnet/developers",
       BUY_START_URL:
         "https://www.tswaps.com/tlos?base=eosio.token-TLOS&quote=token.start-START",
@@ -25,12 +24,11 @@ export default function () {
         TEST_NETWORK: true,
         NETWORK_CHAIN_ID:
           "1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f",
-        NETWORK_HOST: "testnet.telos.caleos.io",
-        // NETWORK_HOST: "testnet.telos.africa",
+        NETWORK_HOST: "testnet.telos.net",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
         NETWORK_EXPLORER: "https://eosauthority.com",
-        HYPERION_ENDPOINT: "https://testnet.telos.caleos.io",
+        HYPERION_ENDPOINT: "https://testnet.telos.net",
         CREATE_ACCOUNT: "https://app.telos.net/testnet/developers",
         BUY_START_URL:
           "https://www.tswaps.com/tlos?base=eosio.token-TLOS&quote=token.start-START",
@@ -42,11 +40,11 @@ export default function () {
         TEST_NETWORK: false,
         NETWORK_CHAIN_ID:
           "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11",
-        NETWORK_HOST: "telos.caleos.io",
+        NETWORK_HOST: "mainnet.telos.net",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
         NETWORK_EXPLORER: "https://telos.bloks.io",
-        HYPERION_ENDPOINT: "https://telos.caleos.io",
+        HYPERION_ENDPOINT: "https://mainnet.telos.net",
         CREATE_ACCOUNT: "https://telos.net/create-account/",
         BUY_START_URL:
           "https://www.tswaps.com/tlos?base=eosio.token-TLOS&quote=token.start-START",
