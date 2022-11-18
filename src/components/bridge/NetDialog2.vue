@@ -52,20 +52,10 @@ export default {
       return this.isFrom ? this.getFromChain : this.getToChain;
     },
     chainOptions() {
-      if (this.getToken.toChain !== undefined && !this.isFrom) {
-        return this.getAllPossibleChains.filter(
-          (el) =>
-            this.getToken.toChain
-              .map((c) => c.toUpperCase())
-              .includes(el.NETWORK_NAME) ||
-            el.NETWORK_NAME === this.getCurrentChain.NETWORK_NAME
-        );
-      } else {
-          const exclude = ["EOS", "WAX"];
-          return this.getAllPossibleChains.filter((el)=>{
-            return el.NETWORK_NAME !== this.getToChain.NETWORK_NAME && el.NETWORK_NAME !== this.getFromChain.NETWORK_NAME && !exclude.includes(el.NETWORK_NAME)
-          });
-      }
+      const choices = ["TELOS", "EOS", "WAX"];
+      return this.getAllPossibleChains.filter((el)=>{
+        return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME && this.getToChain.NETWORK_NAME != el.NETWORK_NAME;
+      });
     },
   },
   methods: {
@@ -78,13 +68,23 @@ export default {
         this.isFrom &&
         this.getFromChain.NETWORK_NAME !== chain.NETWORK_NAME
       ) {
+        if (this.isAuthenticated) {
+          this.logout();
+        }
         // this.updateToChain(this.getFromChain);
         this.updateFromChain(chain);
+        this.updateCurrentChain(chain.NETWORK_NAME);
+        if (this.getFromChain.NETWORK_NAME == this.getToChain.NETWORK_NAME) {
+          const choices = ["TELOS", "EOS", "WAX"];
+          var optionsLeft = this.getAllPossibleChains.filter((el)=>{
+            return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME;
+          });
+          this.updateToChain(optionsLeft[0]);
+        }
       } else if (
         !this.isFrom &&
         this.getToChain.NETWORK_NAME !== chain.NETWORK_NAME
       ) {
-        // this.updateFromChain(this.getToChain);
         this.updateToChain(chain);
       }
       this.$emit("update:showNetDialog", false);

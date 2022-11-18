@@ -121,7 +121,7 @@ export default {
       newTokenSymbol: "",
     };
   },
-  props: ["showCoinDialog", "isFrom", "isSwap"],
+  props: ["showCoinDialog", "isFrom", "isSwap", "antelope"],
   computed: {
     ...mapGetters("account", ["isAuthenticated", "accountName"]),
     ...mapGetters("tport", ["getTPortTokens"]),
@@ -140,14 +140,6 @@ export default {
         return this.getTPortTokens;
       }
     },
-    // tokensForValidPair() {
-    //   if (this.isSwap) {
-    //     if (this.isFrom) return this.getToToken.toTokens;
-    //     else return this.getFromToken.toTokens;
-    //   } else {
-    //     return [];
-    //   }
-    // }
   },
   methods: {
     ...mapActions("swap", ["updateSwapPool", "updateEstimate"]),
@@ -159,6 +151,7 @@ export default {
       "updateTportTokenBalancesEvm",
     ]),
     ...mapActions("bridge", ["updateBridgeToken"]),
+    ...mapActions("blockchains",["updateCurrentChain"]),
 
     updateSelectedCoin(token) {
       this.updateBridgeToken(token);
@@ -180,23 +173,24 @@ export default {
         );
       });
     },
-    // Used in token list with :class="isValidToken(token) ? '' : 'greyItem'"
-    // isValidToken(token) {
-    //   const res = this.tokensForValidPair?.find(
-    //     el =>
-    //       el.symbol.toLowerCase().includes(token.symbol.toLowerCase()) &&
-    //       el.contract.toLowerCase().includes(token.contract.toLowerCase())
-    //   );
-    //   return res !== undefined;
-    // },
   },
   async mounted() {
     // await this.updatePools();
     // await this.updateAllTokensBalances(this.accountName);
-    await this.updateTPortTokens();
+    if (this.antelope == null)
+      this.antelope = false;
+    console.log("Is Antelope:",this.antelope);
+    if (this.antelope) {
+      console.log("update chain");
+      await this.updateCurrentChain(this.getFromChain.NETWORK_NAME);
+      await this.$store.$api.setAPI(this.$store);
+      await this.updateTPortTokens({contract:"bridge.start",chain:this.getToChain.NETWORK_NAME.toLowerCase()});
+    }
+    else
+      await this.updateTPortTokens();
     !(["TELOS", "EOS", "WAX"].includes(this.getFromChain.NETWORK_NAME))
-      ? this.updateTportTokenBalancesEvm()
-      : this.updateTportTokenBalances();
+      ? await this.updateTportTokenBalancesEvm()
+      : await this.updateTportTokenBalances();
   },
 };
 </script>

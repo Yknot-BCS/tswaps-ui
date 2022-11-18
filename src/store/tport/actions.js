@@ -1,18 +1,33 @@
 import { ethers } from "ethers";
 
 // Get evm bridge tokens from tokens table of tport.start
-export const updateTPortTokens = async function ({ commit, getters }) {
+export const updateTPortTokens = async function ({ commit, getters }, details) {
+    var contract = null;
+    var chain = null;
+    if (details) {
+        if (details.contract)
+            contract = details.contract;
+        if (details.chain)
+            chain = details.chain;
+    }
+    console.log(contract, chain);
+    if (contract == null)
+        contract = process.env.TPORT_ADDRESS;
+    if (chain == null)
+        chain = process.env.TPORT_ADDRESS;
     try {
         let tokens = [];
         const tableResults = await this.$api.getTableRows({
-            code: process.env.TPORT_ADDRESS,
-            scope: process.env.TPORT_ADDRESS,
+            code: contract,
+            scope: chain,
             table: "tokens",
             limit: 10000,
             reverse: false,
             show_payer: false,
         });
         for (let asset of tableResults.rows) {
+            if ('token_info' in asset)
+                asset.token = asset.token_info;
             asset = {
                 ...asset,
                 symbol: this.$getSymFromAsset(asset.token),

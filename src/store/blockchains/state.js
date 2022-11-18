@@ -164,16 +164,16 @@ export default function () {
       {
         NAITIVE_TOKEN: "ETH",
         NETWORK_NAME: "Ethereum",
-        NETWORK_DISPLAY_NAME: "ROPSTEN",
+        NETWORK_DISPLAY_NAME: "Ethereum",
         TEST_NETWORK: true,
         NETWORK_CHAIN_ID:
           "02289E8B9d13C02a853620eff978821b3f0193F6",
-        NETWORK_HOST: "ropsten.etherscan.io",
+        NETWORK_HOST: "eth-goerli.public.blastapi.io",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://ropsten.etherscan.io",
-        HYPERION_ENDPOINT: "https://ropsten.etherscan.io:443",
-        CREATE_ACCOUNT: "https://ropsten.etherscan.io/",
+        NETWORK_EXPLORER: "https://eth-goerli.public.blastapi.io",
+        HYPERION_ENDPOINT: "https://eth-goerli.public.blastapi.io:443",
+        CREATE_ACCOUNT: "https://eth-goerli.public.blastapi.io/",
         BUY_START_URL:
           "https://wax.alcor.exchange/swap?output=START-token.start&input=WAX-eosio.token",
       },

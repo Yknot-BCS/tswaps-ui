@@ -154,3 +154,37 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
     }
   }
 };
+
+export const sendAntelope = async function({ commit, getters, rootGetters }) {
+  var transaction = null;
+  let token = getters.getToken;
+  let amount = getters.getAmount;
+  let accountName = rootGetters["account/accountName"];
+  let toAccount = getters.getToAccount;
+  let toChain = getters.getToChain;
+  // let memo = "test";
+  const actions = [
+    {
+      account: token.contract,
+      name: "transfer",
+      data: {
+        from: accountName.toLowerCase(),
+        to: "bridge.start",
+        quantity: `${parseFloat(amount).toFixed(
+          token.decimals
+        )} ${token.symbol}`,
+        // memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}|${memo}`,
+        memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}`,
+      }
+    }
+  ];
+  try {
+    transaction = await this.$api.signTransaction(actions);
+    console.log(transaction);
+    return transaction;
+  } catch (error) {
+    console.log("Error bridging tokens.", error);
+    commit("general/setErrorMsg", error.message || error, { root: true });
+    return transaction;
+  }
+}

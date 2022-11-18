@@ -4,7 +4,7 @@ export const login = async function (
   { commit, dispatch },
   { idx, account, returnUrl }
 ) {
-  const authenticator = this.$ual.authenticators[idx];
+  const authenticator = this.$ual().authenticators[idx];
   try {
     commit("setLoadingWallet", authenticator.getStyle().text);
     await authenticator.init();
@@ -48,7 +48,7 @@ export const login = async function (
 };
 
 export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
-  const { authenticator, idx } = getAuthenticator(this.$ual);
+  const { authenticator, idx } = getAuthenticator(this.$ual());
   if (authenticator) {
     commit("setAutoLogin", true);
     await dispatch("login", {
@@ -72,7 +72,7 @@ const getAuthenticator = function (ual, wallet = null) {
 };
 
 export const logout = async function ({ commit }) {
-  const { authenticator } = getAuthenticator(this.$ual);
+  const { authenticator } = getAuthenticator(this.$ual());
   try {
     authenticator && (await authenticator.logout());
   } catch (error) {
@@ -123,6 +123,18 @@ export const accountExists = async function (
 ) {
   try {
     const account = await this.$api.getAccount(accountName);
+    return !!account;
+  } catch (e) {
+    return false;
+  }
+};
+
+export const accountExistsOnCurrentChain = async function (
+  { commit, dispatch },
+  accountName
+) {
+  try {
+    const account = await this.$api.getCurrentChainAccount(accountName);
     return !!account;
   } catch (e) {
     return false;

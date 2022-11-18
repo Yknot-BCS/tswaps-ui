@@ -27,17 +27,31 @@ const mainnetList = [
     blockExplorerUrls: ["https://bscscan.com"],
     vaultContract: "0x60f20815aa24B07b3Ec7B64624B65e338aaA85e5",
   },
+  {
+    name: "Telos EVM",
+    remoteId: 3,
+    chainName: "Telos EVM",
+    chainId: 41,
+    rpcUrls: ["https://rpc2.us.telos.net/evm"],
+    nativeCurrency: {
+      name: "TLOS",
+      symbol: "TLOS",
+      decimals: 18,
+    },
+    blockExplorerUrls: ["https://teloscan.io"],
+    vaultContract: "",
+  },
 ];
 
 const testnetList = [
   {
     name: "Ethereum",
     remoteId: 1,
-    chainName: "Ropsten Test Network",
-    chainId: 3,
-    rpcUrls: ["https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"],
+    chainName: "Gorli",
+    chainId: 5,
+    rpcUrls: ["https://eth-goerli.public.blastapi.io"],
     nativeCurrency: {
-      name: "Ropsten ETH",
+      name: "ETH",
       symbol: "ETH",
       decimals: 18,
     },
@@ -70,20 +84,6 @@ const testnetList = [
       decimals: 18,
     },
     blockExplorerUrls: ["https://testnet.telos.net/v2/explore/evm/"],
-    vaultContract: "",
-  },
-  {
-    name: "EOS",
-    remoteId: 3,
-    chainName: "Jungle3 EOS Testnet",
-    chainId: "2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840",
-    rpcUrls: ["https://jungle3.cryptolions.io:443"],
-    nativeCurrency: {
-      name: "EOS",
-      symbol: "EOS",
-      decimals: 18,
-    },
-    blockExplorerUrls: ["https://jungle3.cryptolions.io:443"],
     vaultContract: "",
   },
 ];

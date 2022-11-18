@@ -31,15 +31,13 @@
               :selectedNetwork="this.getFromChain.NETWORK_NAME"
             />
           </div>
-
           <div class="row justify-center fit q-my-xs">
               <div class="cursor-pointer cardCircle" @click="switchNetworks">
                 <i class="fas fa-arrow-down"/>
               </div>
           </div>
-
           <div class="inputCard col-12">
-            <connect
+            <connect-to
               :isFrom="false"
               :isNative="this.isNative(false)"
               :selectedNetwork="this.getToChain.NETWORK_NAME"
@@ -52,7 +50,7 @@
         :name="2"
         title="Transaction details"
         icon="fas fa-file-invoice-dollar"
-        :done="step > 2"
+        :done="step > 3"
       >
         <div class="col-12 q-mb-sm">
           <div class="text-h5 q-mb-sm">Transaction details</div>
@@ -85,7 +83,7 @@
         </div>
         <div class="row">
           <div class="col-12 q-mb-sm">
-            <coin-selector />
+            <coin-selector antelope="true"/>
           </div>
 
           <div class="col-12">
@@ -191,10 +189,11 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import coinSelector from "./CoinSelector.vue";
-import connect from "./Connect.vue";
+import connect from "./Connect2.vue";
 import amountInput from "./AmountInput";
 import sendTxDialog from "./SendTxDialog";
 import tokenAvatar from "src/components/TokenAvatar.vue";
+import ConnectTo from './ConnectTo.vue';
 
 export default {
   components: {
@@ -202,6 +201,7 @@ export default {
     coinSelector,
     amountInput,
     sendTxDialog,
+    ConnectTo,
     tokenAvatar,
 },
   data() {
@@ -240,6 +240,7 @@ export default {
       "getToken",
       "getAmount",
       "getToNative",
+      "getToAccount"
     ]),
 
     selectedToken() {
@@ -309,7 +310,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("account", ["reloadWallet", "setWalletBalances", "logout"]),
+    ...mapActions("account", ["reloadWallet", "setWalletBalances", "accountExistsOnCurrentChain", "logout"]),
     ...mapActions("tport", [
       "updateTPortTokens",
       "updateTportTokenBalances",
@@ -317,15 +318,20 @@ export default {
       "updateTeleports",
       "updateTportTokenBalancesEvm",
     ]),
-    ...mapActions("bridge", ["updateAmount", "sendBridgeToken", "updateToChain", "updateFromChain"]),
+    ...mapActions("bridge", ["updateAmount", "sendAntelope", "updateToChain", "updateFromChain"]),
     ...mapActions("blockchains", ["updateCurrentChain"]),
 
-    switchNetworks(){
+    async switchNetworks(){
+      if (this.isAuthenticated)
+        this.logout();
       const tempHolder = this.getFromChain;
-      this.$store.commit("bridge/setFromChain", this.getToChain);
-      this.updateFromChain(this.getToChain);
-      this.$store.commit("bridge/setToChain", tempHolder);
-      this.updateToChain(tempHolder);
+      const newFromChain = this.getToChain;
+      await this.$store.commit("bridge/setFromChain", newFromChain);
+      await this.updateFromChain(newFromChain);
+      await this.$store.commit("bridge/setToChain", tempHolder);
+      await this.updateToChain(tempHolder);
+      await this.updateCurrentChain(newFromChain.NETWORK_NAME);
+      await this.$store.$api.setAPI(this.$store);
     },
 
     formSubmitted() {
@@ -357,18 +363,38 @@ export default {
       return (
         this.getToken.contract !== "" &&
         this.getAmount > 0 &&
-        this.getAmount < this.getToken.amount
+        this.getAmount <= this.getToken.amount
       );
     },
 
-    handleNext() {
-      if (this.step === 1 && this.isWalletsConnected()) {
-        this.updateTPortTokens();
-        this.updateTeleports(this.accountName);
-        !this.isNative(true)
-          ? this.updateTportTokenBalancesEvm()
-          : this.updateTportTokenBalances();
-        this.$refs.stepper.next();
+    async handleNext() {
+      // if (this.step === 1 && this.isWalletsConnected()) {
+      if (this.step === 1) {
+        if (this.isAuthenticated) {
+          this.updateCurrentChain(this.getToChain.NETWORK_NAME);
+          await this.$store.$api.setAPI(this.$store);
+          var exists = await this.accountExistsOnCurrentChain(this.getToAccount);
+          console.log("The account exists:",exists);
+          if (exists) {
+            await this.updateCurrentChain(this.getFromChain.NETWORK_NAME);
+            await this.$store.$api.setAPI(this.$store);
+            this.$refs.stepper.next();
+          } else {
+            this.$q.notify({
+              color: "yellow",
+              textColor: "black",
+              icon: "information",
+              message: `Note that the account "${this.getToAccount}", does not exist on the ${this.getToChain.NETWORK_NAME} chain`,
+            });
+          }
+        } else {
+          this.$q.notify({
+            color: "yellow",
+            textColor: "black",
+            icon: "information",
+            message: "Please connect a wallet to proceed.",
+          });
+        }
       } else if (this.step === 2 && this.isValidTransaction()) {
         this.$refs.stepper.next();
       } else if (this.step === 3) {
@@ -388,7 +414,7 @@ export default {
 
     async send() {
       try {
-        this.transaction = await this.sendBridgeToken();
+        this.transaction = await this.sendAntelope();
         if (this.transaction) {
           this.showTransaction = true;
           this.transaction = this.transaction.transactionId;
@@ -431,14 +457,17 @@ export default {
       this.selectedTokenSym = this.$route.query.token_sym;
     this.selectedNetwork = this.getCurrentChain.NETWORK_NAME;
     this.reloadWallet(this.accountName);
-    var exclude = ["EOS","WAX"];
-    var options = this.getAllPossibleChains.filter((chain) => !exclude.includes(chain.NETWORK_NAME));
+    this.updateTPortTokens();
+    this.updateTeleports(this.accountName);
+    !this.isNative(true)
+      ? this.updateTportTokenBalancesEvm()
+      : this.updateTportTokenBalances();
+    var include = ["TELOS","EOS","WAX"];
+    var options = this.getAllPossibleChains.filter((chain) => include.includes(chain.NETWORK_NAME));
     if (this.getFromChain.NETWORK_NAME != options[0].NETWORK_NAME && this.isAuthenticated)
       this.logout();
-    this.updateFromChain(options[0]);
-    this.updateCurrentChain(options[0].NETWORK_NAME);
-    this.$store.$api.setAPI(this.$store);
-    this.updateToChain(options[1]);
+    this.$store.commit("bridge/setFromChain", options[0]);
+    this.$store.commit("bridge/setToChain", options[1]);
     this.$store.commit("bridge/resetToken");
   },
 
