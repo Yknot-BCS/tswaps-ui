@@ -24,15 +24,16 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-      'ual',
-      'hyperion',
-      'api',
-      'assetHandler',
-      'errorHandler',
-      'notifyDefaults',
-      'tport',
-      'web3',
-      'erc20',
+      "ual",
+      "hyperion",
+      "api",
+      "assetHandler",
+      "errorHandler",
+      "notifyDefaults",
+      "tport",
+      "web3",
+      "erc20",
+      "newrelic",
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
