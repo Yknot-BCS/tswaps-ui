@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev"
   },
   "dependencies": {
     "@eosdacio/ual-wax": "^1.4.4",
@@ -16,24 +17,25 @@
     "@smontero/ual-sqrl": "^0.1.22",
     "@telosnetwork/telosevm-js": "^0.0.6",
     "@telosnetwork/ual-telos-keycat": "1.10.3",
-    "apexcharts": "^3.33.0",
     "axios": "^0.25.0",
     "babel-loader": "^8.1.0",
+    "chart.js": "^3.8.0",
     "core-js": "^3.6.5",
+    "d3": "^7.6.1",
     "dotenv": "^8.2.0",
     "eosjs": "^21.0.3",
     "eosjs-ecc": "^4.0.7",
     "ethers": "^5.5.4",
     "jdenticon": "^3.1.1",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "quasar": "^1.16.3",
     "ual-anchor": "^1.0.0",
     "ual-ledger": "^0.3.0",
     "ual-scatter": "^0.3.0",
     "ual-wombat": "^0.3.3",
     "universal-authenticator-library": "^0.3.0",
-    "vue-apexcharts": "^1.6.2",
     "vue-form-wizard": "^0.8.4",
+    "vue-google-charts": "^1.1.0",
     "vue-select": "^3.18.3",
     "web3": "^1.7.0"
   },
