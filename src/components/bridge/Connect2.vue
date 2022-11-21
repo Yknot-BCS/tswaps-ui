@@ -47,7 +47,7 @@ import netSelector from "./NetSelector2";
 import metamask from "src/components/Metamask";
 import { copyToClipboard } from "quasar";
 import { ethers } from "ethers";
-import UalDialog from "src/components/UalDialog2.vue";
+import UalDialog from "src/components/UalDialog.vue";
 
 export default {
   components: { netSelector, UalDialog },

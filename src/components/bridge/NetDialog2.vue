@@ -53,9 +53,16 @@ export default {
     },
     chainOptions() {
       const choices = ["TELOS", "EOS", "WAX"];
-      return this.getAllPossibleChains.filter((el)=>{
-        return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME && this.getToChain.NETWORK_NAME != el.NETWORK_NAME;
-      });
+      if (this.isFrom) {
+        return this.getAllPossibleChains.filter((el)=>{
+          return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME;
+        });
+      }
+      else {
+        return this.getAllPossibleChains.filter((el)=>{
+          return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME && this.getToChain.NETWORK_NAME != el.NETWORK_NAME;
+        });
+      }
     },
   },
   methods: {

@@ -162,7 +162,8 @@ export const sendAntelope = async function({ commit, getters, rootGetters }) {
   let accountName = rootGetters["account/accountName"];
   let toAccount = getters.getToAccount;
   let toChain = getters.getToChain;
-  // let memo = "test";
+  let memo = getters.getMemo;
+  // console.log(memo);
   const actions = [
     {
       account: token.contract,
@@ -173,8 +174,8 @@ export const sendAntelope = async function({ commit, getters, rootGetters }) {
         quantity: `${parseFloat(amount).toFixed(
           token.decimals
         )} ${token.symbol}`,
-        // memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}|${memo}`,
-        memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}`,
+        memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}|${memo}`,
+        // memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}`,
       }
     }
   ];

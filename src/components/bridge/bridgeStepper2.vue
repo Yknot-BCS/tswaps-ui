@@ -106,6 +106,15 @@
               :min="minSend"
             />
           </div>
+          <div class="col-12">
+            <q-input
+              outlined
+              label="Memo"
+              :input-style="{ fontSize: '11px' }"
+              @input="setMemo($event)"
+              :value="getMemo"
+            ></q-input>
+          </div>
         </div>
       </q-step>
 
@@ -187,7 +196,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import coinSelector from "./CoinSelector.vue";
 import connect from "./Connect2.vue";
 import amountInput from "./AmountInput";
@@ -240,7 +249,8 @@ export default {
       "getToken",
       "getAmount",
       "getToNative",
-      "getToAccount"
+      "getToAccount",
+      "getMemo"
     ]),
 
     selectedToken() {
@@ -320,6 +330,7 @@ export default {
     ]),
     ...mapActions("bridge", ["updateAmount", "sendAntelope", "updateToChain", "updateFromChain"]),
     ...mapActions("blockchains", ["updateCurrentChain"]),
+    ...mapMutations("bridge",["setMemo"]),
 
     async switchNetworks(){
       if (this.isAuthenticated)
