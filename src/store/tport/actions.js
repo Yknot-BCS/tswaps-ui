@@ -43,6 +43,37 @@ export const updateTPortTokens = async function ({ commit, getters }, details) {
     }
 };
 
+export const updateTelosDTokens = async function ({ commit, getters }) {
+    var contract = "telosd.io";
+    var chain = "telosd.io";
+    try {
+        let tokens = [];
+        const tableResults = await this.$api.getTableRows({
+            code: contract,
+            scope: chain,
+            table: "tokens",
+            limit: 10000,
+            reverse: false,
+            show_payer: false,
+        });
+        for (let asset of tableResults.rows) {
+            if ('token_info' in asset)
+                asset.token = asset.token_info;
+            asset = {
+                ...asset,
+                symbol: this.$getSymFromAsset(asset.token),
+                decimals: this.$getDecimalFromAsset(asset.token),
+                contract: asset.token.contract,
+                amount: 0,
+            };
+            tokens.push(asset);
+        }
+        commit("setTelosDTokens", { tokens });
+    } catch (error) {
+        commit("general/setErrorMsg", error.message || error, { root: true });
+    }
+};
+
 export const updateTeleports = async function ({ commit }, account) {
     try {
         if (account !== null) {
@@ -227,6 +258,53 @@ export const updateTportTokenBalances = async function ({
                     }
                 } catch (error) {
                     commit("setTokenAmount", { token: token, amount: 0 });
+                }
+            }
+        }
+    } catch (error) {
+        console.log("Error getting chain token balance:", error);
+        commit("general/setErrorMsg", error.message || error, { root: true });
+    }
+};
+
+export const updateTelosDTokenBalances = async function ({
+    commit,
+    getters,
+    rootGetters,
+}) {
+    try {
+        var accountName = rootGetters["account/accountName"];
+        if (accountName !== null) {
+            let tokens = getters.getTelosDTokens;
+            const rpc = this.$api.getRpc();
+            for (const token of tokens) {
+                try {
+                    let balance = (
+                        await rpc.get_currency_balance(
+                            token.contract,
+                            accountName,
+                            token.symbol
+                        )
+                    )[0];
+                    // console.log("balance:")
+                    // console.log(balance)
+                    if (balance !== undefined) {
+                        let precision = this.$assetToPrecision(balance);
+                        if (token.token.decimals === 0) {
+                            commit("setTokenPrecision", {
+                                token: token,
+                                precision: precision,
+                            });
+                        }
+                        commit("setTelosDTokenAmount", {
+                            token: token,
+                            amount: this.$assetToAmount(balance),
+                        });
+                    } else {
+                        commit("setTelosDTokenAmount", { token: token, amount: 0 });
+                    }
+                } catch (error) {
+                    commit("setTelosDTokenAmount", { token: token, amount: 0 });
                 }
             }
         }

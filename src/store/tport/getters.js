@@ -32,6 +32,7 @@ export function isEvmTransactionsUpdating(state) {
 }
 
 export const getTPortTokens = ({ tportTokens }) => tportTokens;
+export const getTelosDTokens = ({ telosDTokens }) => telosDTokens;
 
 export const getTPortTokensBySym =
   ({ tportTokens }) =>

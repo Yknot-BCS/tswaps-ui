@@ -155,7 +155,10 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
   }
 };
 
-export const sendAntelope = async function({ commit, getters, rootGetters }) {
+export const sendAntelopeTelosd = async function({ commit, getters, rootGetters },contract) {
+  if (contract == null)
+    contract = "bridge.start";
+  console.log("Sending to contract:",contract);
   var transaction = null;
   let token = getters.getToken;
   let amount = getters.getAmount;
@@ -170,7 +173,7 @@ export const sendAntelope = async function({ commit, getters, rootGetters }) {
       name: "transfer",
       data: {
         from: accountName.toLowerCase(),
-        to: "bridge.start",
+        to: contract,
         quantity: `${parseFloat(amount).toFixed(
           token.decimals
         )} ${token.symbol}`,

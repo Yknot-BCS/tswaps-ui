@@ -231,6 +231,7 @@ export default {
       "getEvmNetworkList",
       "getTPortTokensBySym",
       "getTPortTokens",
+      "getTelosDTokens",
       "getTeleports",
       "getEvmAccountName",
       "getEvmChainId",
@@ -328,7 +329,7 @@ export default {
       "updateTeleports",
       "updateTportTokenBalancesEvm",
     ]),
-    ...mapActions("bridge", ["updateAmount", "sendAntelope", "updateToChain", "updateFromChain"]),
+    ...mapActions("bridge", ["updateAmount", "sendAntelopeTelosd", "updateToChain", "updateFromChain"]),
     ...mapActions("blockchains", ["updateCurrentChain"]),
     ...mapMutations("bridge",["setMemo"]),
 
@@ -425,7 +426,17 @@ export default {
 
     async send() {
       try {
-        this.transaction = await this.sendAntelope();
+        const telosDChains = ["TELOS", "EOS"];
+        const telosDTokenSymbols = this.getTelosDTokens.map((token)=>{
+          return token.symbol;
+        });
+        const chosenToken = this.getToken.symbol;
+        var telosdTrx = (
+          telosDChains.includes(this.getFromChain.NETWORK_NAME) && 
+          telosDChains.includes(this.getToChain.NETWORK_NAME) &&
+          telosDTokenSymbols.includes(chosenToken)
+        );
+        this.transaction = (!telosdTrx) ? await this.sendAntelopeTelosd() : await this.sendAntelopeTelosd("telosd.io");
         if (this.transaction) {
           this.showTransaction = true;
           this.transaction = this.transaction.transactionId;

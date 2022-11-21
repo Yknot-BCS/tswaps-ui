@@ -18,6 +18,10 @@ export function setTPortTokens(state, { tokens }) {
     state.tportTokens = tokens;
 }
 
+export function setTelosDTokens(state, { tokens }) {
+    state.telosDTokens = tokens;
+}
+
 export function setTeleports(state, { teleports }) {
     state.teleports = teleports;
 }
@@ -38,4 +42,14 @@ export const setTokenAmount = (state, { token, amount }) => {
         new_token.amount = amount;
     }
     state.tportTokens = state.tportTokens.sort((a, b) => b.amount - a.amount);
+};
+
+export const setTelosDTokenAmount = (state, { token, amount }) => {
+    let new_token = state.telosDTokens.find(
+        (t) => t.symbol === token.symbol && t.contract === token.contract
+    );
+    if (new_token !== undefined) {
+        new_token.amount = amount;
+    }
+    state.telosDTokens = state.telosDTokens.sort((a, b) => b.amount - a.amount);
 };
