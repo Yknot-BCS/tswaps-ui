@@ -307,6 +307,12 @@ export default {
     this.updateBalance();
   },
   watch: {
+    async selectedNetwork() {
+      if (!["TELOS","EOS","WAX"].includes(this.selectedNetwork)) {
+        this.connectWeb3();
+        this.switchMetamaskNetwork(this.selectedNetwork);
+      }
+    },
     async getEvmChainId() {
       this.updateBalance();
     },
