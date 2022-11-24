@@ -10,7 +10,7 @@ export default function () {
       NETWORK_HOST: "testnet.telos.net",
       NETWORK_PORT: 443,
       NETWORK_PROTOCOL: "https",
-      NETWORK_EXPLORER: "https://eosauthority.com",
+      NETWORK_EXPLORER: "https://explorer-test.telos.net",
       HYPERION_ENDPOINT: "https://testnet.telos.net",
       CREATE_ACCOUNT: "https://app.telos.net/testnet/developers",
       BUY_START_URL:
@@ -27,7 +27,7 @@ export default function () {
         NETWORK_HOST: "testnet.telos.net",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://eosauthority.com",
+        NETWORK_EXPLORER: "https://explorer-test.telos.net",
         HYPERION_ENDPOINT: "https://testnet.telos.net",
         CREATE_ACCOUNT: "https://app.telos.net/testnet/developers",
         BUY_START_URL:
@@ -43,7 +43,7 @@ export default function () {
         NETWORK_HOST: "mainnet.telos.net",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://telos.bloks.io",
+        NETWORK_EXPLORER: "https://explorer.telos.net",
         HYPERION_ENDPOINT: "https://mainnet.telos.net",
         CREATE_ACCOUNT: "https://telos.net/create-account/",
         BUY_START_URL:
@@ -121,7 +121,7 @@ export default function () {
         NETWORK_HOST: "testnet.waxsweden.org",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://wax-test.bloks.io",
+        NETWORK_EXPLORER: "https://testnet.teloscan.io/",
         HYPERION_ENDPOINT: "https://testnet.waxsweden.org:443",
         CREATE_ACCOUNT: "https://waxsweden.org/create-testnet-account/",
         BUY_START_URL:
@@ -137,7 +137,7 @@ export default function () {
         NETWORK_HOST: "wax.greymass.com",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://wax.bloks.io",
+        NETWORK_EXPLORER: "https://www.teloscan.io/",
         HYPERION_ENDPOINT: "https://wax.greymass.com:443",
         CREATE_ACCOUNT: "https://all-access.wax.io/",
         BUY_START_URL:
@@ -153,7 +153,23 @@ export default function () {
         NETWORK_HOST: "wax.greymass.com",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://wax.bloks.io",
+        NETWORK_EXPLORER: "https://testnet.bscscan.com",
+        HYPERION_ENDPOINT: "https://wax.greymass.com:443",
+        CREATE_ACCOUNT: "https://all-access.wax.io/",
+        BUY_START_URL:
+          "https://wax.alcor.exchange/swap?output=START-token.start&input=WAX-eosio.token",
+      },
+      {
+        NAITIVE_TOKEN: "BNB",
+        NETWORK_NAME: "BSC",
+        NETWORK_DISPLAY_NAME: "Binance Smart Chain",
+        TEST_NETWORK: false,
+        NETWORK_CHAIN_ID:
+          "5213fcB1Cf69B029A32F9454fD29f2a500af569a",
+        NETWORK_HOST: "wax.greymass.com",
+        NETWORK_PORT: 443,
+        NETWORK_PROTOCOL: "https",
+        NETWORK_EXPLORER: "https://bscscan.com",
         HYPERION_ENDPOINT: "https://wax.greymass.com:443",
         CREATE_ACCOUNT: "https://all-access.wax.io/",
         BUY_START_URL:
@@ -169,7 +185,7 @@ export default function () {
         NETWORK_HOST: "eth-goerli.public.blastapi.io",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://eth-goerli.public.blastapi.io",
+        NETWORK_EXPLORER: "https://goerli.etherscan.io",
         HYPERION_ENDPOINT: "https://eth-goerli.public.blastapi.io:443",
         CREATE_ACCOUNT: "https://eth-goerli.public.blastapi.io/",
         BUY_START_URL:

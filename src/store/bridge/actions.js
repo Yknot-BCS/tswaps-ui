@@ -21,7 +21,7 @@ export const updateAmount = async function ({ commit }, amount) {
 export const updateToChain = async function ({ commit }, chain) {
   try {
     commit("setToChain", chain);
-    if (chain.NETWORK_NAME == "TELOS") {
+    if (["TELOS","EOS","WAX"].includes(chain.NETWORK_NAME)) {
       commit("setToNative", true);
     } else {
       commit("setToNative", false);
