@@ -27,11 +27,11 @@ export const login = async function (
       this.$ualUser = account;
       this.$type = "ual";
       commit("setAccountName", accountName);
-      await authenticator.logout();
-      // localStorage.setItem("autoLogin", authenticator.constructor.name);
-      // localStorage.setItem("account", accountName);
-      // localStorage.setItem("returning", true);
-      // dispatch("getAccountProfile");
+      // await authenticator.logout();
+      localStorage.setItem("autoLogin", authenticator.constructor.name);
+      localStorage.setItem("account", accountName);
+      localStorage.setItem("returning", true);
+      dispatch("getAccountProfile");
     }
   } catch (e) {
     const error =
@@ -47,8 +47,9 @@ export const login = async function (
   }
 };
 
-export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
+export const autoLogin = async function ({ dispatch, commit, rootGetters }, returnUrl) {
   const { authenticator, idx } = getAuthenticator(this.$ual());
+  console.log("===============",authenticator);
   if (authenticator) {
     commit("setAutoLogin", true);
     await dispatch("login", {
@@ -58,6 +59,8 @@ export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
     });
     commit("setAutoLogin", false);
   }
+  if (authenticator && authenticator.chainId != rootGetters["bridge/getFromChain"].NETWORK_CHAIN_ID)
+    return dispatch("logout");
 };
 
 const getAuthenticator = function (ual, wallet = null) {
@@ -81,7 +84,7 @@ export const logout = async function ({ commit }) {
   commit("setProfile", undefined);
   commit("setAccountName");
   this.$type = "";
-  localStorage.removeItem("autoLogin");
+  localStorage.clear();
 
   if (this.$router.currentRoute.path !== "/") {
     //this.$router.push({ path: "/bridge" });

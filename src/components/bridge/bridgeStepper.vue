@@ -357,7 +357,7 @@ export default {
       return (
         this.getToken.contract !== "" &&
         this.getAmount > 0 &&
-        this.getAmount < this.getToken.amount
+        this.getAmount <= this.getToken.amount
       );
     },
 
@@ -440,6 +440,7 @@ export default {
     this.$store.$api.setAPI(this.$store);
     this.updateToChain(options[1]);
     this.$store.commit("bridge/resetToken");
+    this.updateTPortTokens();
   },
 
   watch: {

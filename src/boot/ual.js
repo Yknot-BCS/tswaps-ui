@@ -7,15 +7,15 @@ import { Anchor } from "ual-anchor";
 import { Wax } from "@eosdacio/ual-wax";
 
 export default async ({ Vue, store }) => {
-  // if (localStorage.getItem("selectedChain") != null) {
-  //   await store.dispatch(
-  //     "blockchains/updateCurrentChain",
-  //     localStorage.getItem("selectedChain")
-  //   );
-  // } else {
-  //   console.log("Set chain to telos");
-  //   await store.dispatch("blockchains/updateCurrentChain", "TELOS");
-  // }
+  if (localStorage.getItem("selectedChain") != null) {
+    await store.dispatch(
+      "blockchains/updateCurrentChain",
+      localStorage.getItem("selectedChain")
+    );
+  } else {
+    console.log("Set chain to telos");
+    await store.dispatch("blockchains/updateCurrentChain", "TELOS");
+  }
   const setupAuth = () => {
     let getCurrentChain = store.getters["blockchains/getCurrentChain"];
     // console.log(getCurrentChain.NETWORK_NAME);

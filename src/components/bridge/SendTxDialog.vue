@@ -68,7 +68,7 @@ export default {
       if (["TELOS", "EOS", "WAX"].includes(this.getFromChain.NETWORK_NAME)){
         return `${this.getFromChain.NETWORK_EXPLORER}/transaction/`;
       } else {
-        return `${this.getFromChain.NETWORK_EXPLORER}/tx/0x`;
+        return `${this.getFromChain.NETWORK_EXPLORER}/tx/`;
       };
     },
     ...mapGetters("bridge", [
