@@ -57,14 +57,14 @@ const getCurrentChainAccount = async function (accountName) {
 const setAPI = async function (store) {
   // TODO really slower than mixin, but so much cleaner
   console.log("setAPI");
-  // if (localStorage.getItem("selectedChain") != null) {
-  //   await store.dispatch(
-  //     "blockchains/updateCurrentChain",
-  //     localStorage.getItem("selectedChain")
-  //   );
-  // } else {
-  //   await store.dispatch("blockchains/updateCurrentChain", "TELOS");
-  // }
+  if (localStorage.getItem("selectedChain") != null) {
+    await store.dispatch(
+      "blockchains/updateCurrentChain",
+      localStorage.getItem("selectedChain")
+    );
+  } else {
+    await store.dispatch("blockchains/updateCurrentChain", "TELOS");
+  }
   // console.log(store);
   let getCurrentChain = store.getters["blockchains/getCurrentChain"];
   const rpc = new JsonRpc(
