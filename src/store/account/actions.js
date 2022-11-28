@@ -50,8 +50,6 @@ export const login = async function (
 export const autoLogin = async function ({ dispatch, commit, rootGetters }, returnUrl) {
   const { authenticator, idx } = getAuthenticator(this.$ual());
   console.log("===============",authenticator);
-  if (authenticator.chainId != rootGetters["bridge/getFromChain"].NETWORK_CHAIN_ID)
-    return dispatch("logout");
   if (authenticator) {
     commit("setAutoLogin", true);
     await dispatch("login", {
@@ -61,6 +59,8 @@ export const autoLogin = async function ({ dispatch, commit, rootGetters }, retu
     });
     commit("setAutoLogin", false);
   }
+  if (authenticator && authenticator.chainId != rootGetters["bridge/getFromChain"].NETWORK_CHAIN_ID)
+    return dispatch("logout");
 };
 
 const getAuthenticator = function (ual, wallet = null) {
