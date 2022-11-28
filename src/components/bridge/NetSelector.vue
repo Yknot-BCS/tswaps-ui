@@ -4,11 +4,11 @@
     @click="showNetDialog = !showNetDialog"
   >
     <div class="imgWrapper row justify-center items-center">
-      <token-avatar :token="selectedNetwork" :avatarSize="40" />
+      <token-avatar :token="selectedNetwork.NETWORK_NAME" :avatarSize="40" />
     </div>
     <div class="col ">
-      <div v-if="selectedAccount != selectedNetwork" class="row text-subtitle2 q-mx-xs smallRow ellipsis">
-        {{ selectedNetwork }}
+      <div v-if="selectedAccount != selectedNetwork.NETWORK_DISPLAY_NAME" class="row text-subtitle2 q-mx-xs smallRow ellipsis">
+        {{ selectedNetwork.NETWORK_DISPLAY_NAME }}
       </div>
       <div class="text-h6 q-mx-xs smallRow ellipsis">
         {{ selectedAccount }}
@@ -64,7 +64,7 @@ export default {
       let chain = this.getToChain;
       if (this.isFrom) chain = this.getFromChain;
       if (!this.isFrom) chain = this.getToChain;
-      if (chain.NETWORK_DISPLAY_NAME) return chain.NETWORK_DISPLAY_NAME;
+      if (chain.NETWORK_DISPLAY_NAME) return chain;
       else return "";
     },
   },
