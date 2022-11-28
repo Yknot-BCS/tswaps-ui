@@ -121,7 +121,7 @@ export default function () {
         NETWORK_HOST: "testnet.waxsweden.org",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://testnet.teloscan.io/",
+        NETWORK_EXPLORER: "https://testnet.teloscan.io",
         HYPERION_ENDPOINT: "https://testnet.waxsweden.org:443",
         CREATE_ACCOUNT: "https://waxsweden.org/create-testnet-account/",
         BUY_START_URL:
@@ -137,7 +137,7 @@ export default function () {
         NETWORK_HOST: "wax.greymass.com",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
-        NETWORK_EXPLORER: "https://www.teloscan.io/",
+        NETWORK_EXPLORER: "https://www.teloscan.io",
         HYPERION_ENDPOINT: "https://wax.greymass.com:443",
         CREATE_ACCOUNT: "https://all-access.wax.io/",
         BUY_START_URL:
