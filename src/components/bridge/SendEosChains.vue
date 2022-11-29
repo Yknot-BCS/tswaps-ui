@@ -148,8 +148,7 @@ export default {
       } else {
         newChain = blockchains.find((el) => el.TEST_NETWORK === false);
       }
-      // console.log(newChain)
-
+      
       //set rpc
       const rpc = new JsonRpc(
         `${newChain.NETWORK_PROTOCOL}://${newChain.NETWORK_HOST}:${newChain.NETWORK_PORT}`

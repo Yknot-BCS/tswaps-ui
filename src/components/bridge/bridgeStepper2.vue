@@ -283,8 +283,7 @@ export default {
     supportedEosChains() {
       const bridgeTokens = this.getBridgeTokens;
       if (bridgeTokens && this.selectedToken !== undefined) {
-        // console.log({ bridgeTokens });
-        let res = [this.getCurrentChain.NETWORK_NAME];
+                let res = [this.getCurrentChain.NETWORK_NAME];
         for (let token of bridgeTokens) {
           if (
             this.$getSymFromAsset(token.token_info) === this.selectedTokenSym
@@ -299,8 +298,7 @@ export default {
     supportedEvmChains() {
       const token = this.getTPortTokensBySym(this.selectedTokenSym);
       if (token) {
-        // console.log({ token });
-        let res = [];
+                let res = [];
         for (let r of token.remote_contracts) {
           const network = this.getEvmNetworkList.find(
             (el) => el.remoteId === r.key
@@ -347,7 +345,7 @@ export default {
     },
 
     formSubmitted() {
-      console.log("submit");
+      // console.log("submit");
     },
 
     isNative(isFrom) {
@@ -386,7 +384,7 @@ export default {
           this.updateCurrentChain(this.getToChain.NETWORK_NAME);
           await this.$store.$api.setAPI(this.$store);
           var exists = await this.accountExistsOnCurrentChain(this.getToAccount);
-          console.log("The account exists:",exists);
+          // console.log("The account exists:",exists);
           if (exists) {
             await this.updateCurrentChain(this.getFromChain.NETWORK_NAME);
             await this.$store.$api.setAPI(this.$store);

@@ -13,9 +13,7 @@ export const updateCurrentChain = async function (
     newChain = blockchains.find((el) => el.TEST_NETWORK === false);
   }
 
-  // console.log(blockchains)
-  // console.log(newChain)
-
+    
   commit("setCurrentChain", {
     newChain: newChain,
   });
@@ -37,9 +35,7 @@ export const setNewChain = async function (
     newChain = blockchains.find((el) => el.TEST_NETWORK === false);
   }
 
-  // console.log(blockchains)
-  // console.log(newChain)
-
+    
   commit("setCurrentChain", {
     newChain: newChain,
   });

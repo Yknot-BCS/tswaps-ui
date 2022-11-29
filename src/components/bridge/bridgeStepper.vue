@@ -271,8 +271,7 @@ export default {
     supportedEosChains() {
       const bridgeTokens = this.getBridgeTokens;
       if (bridgeTokens && this.selectedToken !== undefined) {
-        // console.log({ bridgeTokens });
-        let res = [this.getCurrentChain.NETWORK_NAME];
+                let res = [this.getCurrentChain.NETWORK_NAME];
         for (let token of bridgeTokens) {
           if (
             this.$getSymFromAsset(token.token_info) === this.selectedTokenSym
@@ -287,8 +286,7 @@ export default {
     supportedEvmChains() {
       const token = this.getTPortTokensBySym(this.selectedTokenSym);
       if (token) {
-        // console.log({ token });
-        let res = [];
+                let res = [];
         for (let r of token.remote_contracts) {
           const network = this.getEvmNetworkList.find(
             (el) => el.remoteId === r.key
@@ -329,7 +327,7 @@ export default {
     },
 
     formSubmitted() {
-      console.log("submit");
+      // console.log("submit");
     },
 
     isNative(isFrom) {

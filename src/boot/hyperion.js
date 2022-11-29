@@ -12,7 +12,6 @@ export default async ({ Vue, store }) => {
     await store.dispatch("blockchains/updateCurrentChain", "TELOS");
   }
   let currentChain = store.getters["blockchains/getCurrentChain"];
-  console.log(currentChain);
 
   hyperion = axios.create({
     baseURL: currentChain.HYPERION_ENDPOINT,

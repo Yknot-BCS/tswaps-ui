@@ -8,11 +8,8 @@ export const login = async function (
   try {
     commit("setLoadingWallet", authenticator.getStyle().text);
     await authenticator.init();
-    console.log(account);
     if (!account) {
-      console.log("Here");
       const requestAccount = await authenticator.shouldRequestAccountName();
-      console.log(requestAccount);
       if (requestAccount) {
         await dispatch("fetchAvailableAccounts", idx);
         commit("setRequestAccount", true);
@@ -20,7 +17,6 @@ export const login = async function (
       }
     }
     const users = await authenticator.login(account);
-    console.log(users);
     if (users.length) {
       const account = users[0];
       const accountName = await account.getAccountName();
@@ -39,8 +35,6 @@ export const login = async function (
       e.message ||
       e.reason;
     commit("general/setErrorMsg", error, { root: true });
-    console.log("Login error: ", error);
-    console.log("Clear local:");
     localStorage.clear();
   } finally {
     commit("setLoadingWallet");
@@ -49,7 +43,6 @@ export const login = async function (
 
 export const autoLogin = async function ({ dispatch, commit, rootGetters }, returnUrl) {
   const { authenticator, idx } = getAuthenticator(this.$ual());
-  console.log("===============",authenticator);
   if (authenticator) {
     commit("setAutoLogin", true);
     await dispatch("login", {
@@ -160,7 +153,6 @@ export const accountExistsOnChain = async function (
   } else {
     newChain = blockchains.find((el) => el.TEST_NETWORK === false);
   }
-  // console.log(newChain)
 
   //set rpc
   const rpc = new JsonRpc(
@@ -187,8 +179,7 @@ export const getChainWalletTable = async function (
     });
 
     let contractWalletTbl = tableResults.rows;
-    // console.log(contractWalletTbl)
-
+    
     // Set each token on state
     for (const token_info of contractWalletTbl) {
       let token_sym = this.$chainToSym(token_info.balance);
@@ -221,8 +212,7 @@ export const resetWallet = async function ({ commit, getters, dispatch }) {
 
 // reload all wallet info
 export const reloadWallet = async function ({ dispatch }, account) {
-  // console.log({ account });
-};
+  };
 
 // reset liquid
 export const resetLiquid = async function ({ commit, getters, dispatch }) {
@@ -246,8 +236,7 @@ export const getChainAccountStakeInfo = async function (
         reverse: false,
         show_payer: false,
       });
-      // console.log(accountsResult.rows[0]);
-
+      
       if (accountsResult.rows[0] !== undefined) {
         return accountsResult.rows[0];
       } else {
@@ -279,8 +268,7 @@ export const getChainTiersTable = async function ({
     });
 
     if (tiersTable.rows.length > 0) {
-      // console.log(tiersTable.rows);
-      return tiersTable.rows;
+            return tiersTable.rows;
     } else {
       return [];
     }

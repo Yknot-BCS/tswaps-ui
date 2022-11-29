@@ -10,7 +10,7 @@ export const updateTPortTokens = async function ({ commit, getters }, details) {
         if (details.chain)
             chain = details.chain;
     }
-    console.log(contract, chain);
+    // console.log(contract, chain);
     if (contract == null)
         contract = process.env.TPORT_ADDRESS;
     if (chain == null)
@@ -118,8 +118,7 @@ export const updateTeleports = async function ({ commit }, account) {
                 })
                 .sort((a, b) => (a.time < b.time ? 1 : -1));
 
-            // console.log("Teleports:", teleports);
-            commit("setTeleports", { teleports });
+                        commit("setTeleports", { teleports });
         }
     } catch (error) {
         commit("general/setErrorMsg", error.message || error, { root: true });
@@ -185,7 +184,7 @@ export const updateNativeTransactions = async function ({
                     obj[row.ref] = newRowObj;
                 }
             });
-            console.log(obj);
+            // console.log(obj);
             let tokenTransfersInfoFinal = tokenTransfersInfo.map((tti) => {
                 var ref = tti.ref.replace("0x","");
                 return {
@@ -239,9 +238,7 @@ export const updateTportTokenBalances = async function ({
                             token.symbol
                         )
                     )[0];
-                    // console.log("balance:")
-                    // console.log(balance)
-                    if (balance !== undefined) {
+                                                            if (balance !== undefined) {
                         let precision = this.$assetToPrecision(balance);
                         if (token.token.decimals === 0) {
                             commit("setTokenPrecision", {
@@ -286,9 +283,7 @@ export const updateTelosDTokenBalances = async function ({
                             token.symbol
                         )
                     )[0];
-                    // console.log("balance:")
-                    // console.log(balance)
-                    if (balance !== undefined) {
+                                                            if (balance !== undefined) {
                         let precision = this.$assetToPrecision(balance);
                         if (token.token.decimals === 0) {
                             commit("setTokenPrecision", {
@@ -333,20 +328,17 @@ export const updateTportTokenBalancesEvm = async function (
                         )
                             balance = 0;
                         else {
-                            // console.log("TPort token:", token);
-                            if (typeof token === "undefined") {
+                                                        if (typeof token === "undefined") {
                                 console.error("TPort Token not found");
                             } else {
                                 const remoteContractAddress = token.remote_contracts.find(
                                     (el) => el.key === getters.getEvmRemoteId
                                 ).value;
-                                // console.log("remoteContractAddress:", remoteContractAddress);
-                                const remoteInstance = new web3.eth.Contract(
+                                                                const remoteInstance = new web3.eth.Contract(
                                     this._vm.$erc20Abi,
                                     remoteContractAddress
                                 ); // TODO Add check to validate abi
-                                // console.log("remoteInstance:", remoteInstance);
-                                const remotebalance = await remoteInstance.methods
+                                                                const remotebalance = await remoteInstance.methods
                                     .balanceOf(getters.getEvmAccountName)
                                     .call();
                                 balance = Number(
@@ -359,8 +351,7 @@ export const updateTportTokenBalancesEvm = async function (
                                             .toString()
                                     ).toFixed(token.decimals)
                                 );
-                                // console.log("Balance is:", balance);
-
+                                
                             }
                         }
                     }
@@ -383,8 +374,7 @@ export const updateTportTokenBalancesEvm = async function (
                 } catch (error) {
                     commit("setTokenAmount", { token: token, amount: 0 });
                 }
-                // console.log("balance:", balance);
-            }
+                            }
         }
     } catch (error) {
         console.log("Error getting chain token balance:", error);

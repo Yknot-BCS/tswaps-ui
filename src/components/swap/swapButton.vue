@@ -126,7 +126,7 @@ export default {
 
       let transaction;
       if (true) {
-        console.log("Trying to do a swap");
+        // console.log("Trying to do a swap");
         const actions = [
           {
             account: this.token_contract, // token contract

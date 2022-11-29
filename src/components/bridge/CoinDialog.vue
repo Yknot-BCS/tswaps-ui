@@ -167,14 +167,14 @@ export default {
 
     filterTokens() {
       // TODO Show all when no input
-      console.log("Len: ", this.search.length);
+      // console.log("Len: ", this.search.length);
       var tokens = [...this.getTPortTokens];
       const telosDChains = ["TELOS", "EOS"];
       var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
       if (telosdTrx)
         tokens.push(...this.getTelosDTokens);
       if (this.search.length > 0) {
-        console.log("text with filter");
+        // console.log("text with filter");
         this.filterByText(tokens);
       } else this.filteredTokens = tokens;
     },
@@ -188,16 +188,16 @@ export default {
     },
   },
   async mounted() {
-    console.log("mount start");
+    // console.log("mount start");
     const telosDChains = ["TELOS", "EOS"];
     var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
     // await this.updatePools();
     // await this.updateAllTokensBalances(this.accountName);
     if (this.antelope == null)
       this.antelope = false;
-    console.log("Is Antelope:",this.antelope);
+    // console.log("Is Antelope:",this.antelope);
     if (this.antelope) {
-      console.log("update chain");
+      // console.log("update chain");
       await this.updateCurrentChain(this.getFromChain.NETWORK_NAME);
       await this.$store.$api.setAPI(this.$store);
       await this.updateTPortTokens({contract:"bridge.start",chain:this.getToChain.NETWORK_NAME.toLowerCase()});
@@ -216,7 +216,7 @@ export default {
       if (telosdTrx)
         await this.updateTelosDTokenBalances();
     }
-    console.log("mount finish");
+    // console.log("mount finish");
   },
 };
 </script>

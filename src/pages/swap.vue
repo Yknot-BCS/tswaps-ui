@@ -288,12 +288,10 @@ export default {
     ]),
 
     findToken(tokenQuery) {
-      // console.log("query:", tokenQuery);
-      let res = null;
+            let res = null;
       if (tokenQuery) {
         const arr = tokenQuery.split('-');
-        // console.log("arr:", arr);
-        if (arr.length > 1) {
+                if (arr.length > 1) {
           const token_contract = arr[0];
           const token_sym = arr[1];
           res = this.getTokens.find(

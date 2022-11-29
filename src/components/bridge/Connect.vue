@@ -236,7 +236,7 @@ export default {
           },
         },
       ];
-      console.log("Actions: ", actions);
+      // console.log("Actions: ", actions);
 
       transaction = await this.$store.$api.signTransaction(actions);
       if (transaction) {
@@ -255,8 +255,7 @@ export default {
     async addTokenToMetamask() {
       const token = this.getTPortTokensBySym(this.selectedTokenSym);
       let tokenAddress = null;
-      // console.log("TPort token:", token);
-      if (typeof token === "undefined") {
+            if (typeof token === "undefined") {
         console.error("TPort Token not found");
       } else {
         tokenAddress = token.remote_contracts.find(

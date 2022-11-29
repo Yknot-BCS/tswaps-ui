@@ -100,11 +100,11 @@ export const sendToEvm = async function ({ commit, getters, rootGetters }) {
       },
     },
   ];
-  console.log("Actions: ", actions);
+  // console.log("Actions: ", actions);
 
   try {
     transaction = await this.$api.signTransaction(actions);
-    console.log(transaction);
+    // console.log(transaction);
     return transaction;
   } catch (error) {
     console.log("Error bridging tokens.", error);
@@ -141,7 +141,7 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
             await remoteInstance.methods.decimals().call()
           )
           .toString();
-        console.log("weiAmount:", weiAmount);
+        // console.log("weiAmount:", weiAmount);
         try {
           const resp = await remoteInstance.methods
             .teleport(accountName, weiAmount, 0)
@@ -158,7 +158,7 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
 export const sendAntelopeTelosd = async function({ commit, getters, rootGetters },contract) {
   if (contract == null)
     contract = "bridge.start";
-  console.log("Sending to contract:",contract);
+  // console.log("Sending to contract:",contract);
   var transaction = null;
   let token = getters.getToken;
   let amount = getters.getAmount;
@@ -166,8 +166,7 @@ export const sendAntelopeTelosd = async function({ commit, getters, rootGetters 
   let toAccount = getters.getToAccount;
   let toChain = getters.getToChain;
   let memo = getters.getMemo;
-  // console.log(memo);
-  const actions = [
+    const actions = [
     {
       account: token.contract,
       name: "transfer",
@@ -184,7 +183,7 @@ export const sendAntelopeTelosd = async function({ commit, getters, rootGetters 
   ];
   try {
     transaction = await this.$api.signTransaction(actions);
-    console.log(transaction);
+    // console.log(transaction);
     return transaction;
   } catch (error) {
     console.log("Error bridging tokens.", error);

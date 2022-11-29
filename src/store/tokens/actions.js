@@ -19,8 +19,7 @@ export const updateTokens = async function ({
       reverse: false,
       show_payer: false,
     });
-    // console.log("tableResults", tableResults);
-    pools.push(...tableResults.rows);
+        pools.push(...tableResults.rows);
 
     for (const pool of pools) {
       let res0 = pool.reserve0;
@@ -120,8 +119,7 @@ export const updateAddNewToken = async function (
     let logo = payload?.logo;
     let tokens = JSON.parse(JSON.stringify(getters.getTokens));
 
-    // console.log(contract, symbol)
-
+    
     // check duplicates
     let token = {
       symbol: symbol,
@@ -172,8 +170,7 @@ export const updateAddNewToken = async function (
     }
     let parsed = JSON.stringify(localTokens);
     localStorage.setItem("tokens", parsed);
-    // console.log(parsed)
-  } catch (error) {
+      } catch (error) {
     console.error("Error adding token:", error);
     commit("general/setErrorMsg", error.message || error, { root: true });
   }
@@ -237,9 +234,7 @@ export const updateTokenBalances = async function (
               token.symbol
             )
           )[0];
-          // console.log("balance:")
-          // console.log(balance)
-          if (balance !== undefined) {
+                              if (balance !== undefined) {
             let precision = this.$assetToPrecision(balance);
             if (token.precision === 0) {
               commit("setTokenPrecision", {
@@ -336,8 +331,7 @@ export const updateAllTokensBalances = async function (
       const userCoins = await this.$hyperion.get(
         `/v2/state/get_tokens?account=${accountName}&limit=1000`
       );
-      // console.log("user token balances:", userCoins.data.tokens);
-
+      
       let new_tokens = [];
 
       for (const token of userCoins.data.tokens) {

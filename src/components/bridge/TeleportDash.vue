@@ -255,8 +255,7 @@ export default {
           };
         });
         var evmPorts = evmTrxs.map((trx)=>{
-          // console.log(trx);
-          return {
+                    return {
             quantity: trx.quantity,
             eth_address: trx.to,
             // chain_id: trx.chain_id,
@@ -322,7 +321,7 @@ export default {
       }
 
       const teleportData = res.rows[0];
-      console.log("Teleport Data:", teleportData);
+      // console.log("Teleport Data:", teleportData);
 
       // logteleport(uint64_t id, uint32_t timestamp, name from, asset quantity, uint8_t chain_id, checksum256 eth_address)
       const sb = new Serialize.SerialBuffer({
@@ -344,14 +343,13 @@ export default {
         )
       ) {
         data = "0x" + toHexString(sb.array.slice(0, 69));
-        console.log("Old Teleport Contract");
+        // console.log("Old Teleport Contract");
       } else {
         sb.pushArray(fromHexString(remoteContractAddress));
         sb.push(this.$chainToDecimals(teleportData.quantity));
         data = "0x" + toHexString(sb.array.slice(0, 91));
       }
 
-      //   console.log("signData:", "0x" + toHexString(sb.array.slice(0, 91)));
       return {
         claimAccount: "0x" + teleportData.eth_address,
         data: data,
@@ -359,9 +357,9 @@ export default {
       };
     },
     async claimEvm(teleport) {
-      console.log(teleport);
+      // console.log(teleport);
       this.claiming = teleport.id;
-      console.log("Claiming teleport:", teleport);
+      // console.log("Claiming teleport:", teleport);
       const { injectedWeb3, web3 } = await this.$web3();
 
       if (injectedWeb3) {
@@ -377,7 +375,7 @@ export default {
             teleport.id,
             remoteContractAddress
           );
-          console.log(JSON.stringify(signData));
+          // console.log(JSON.stringify(signData));
 
           const remoteInstance = new web3.eth.Contract(
             this.$erc20Abi,
@@ -387,8 +385,7 @@ export default {
           const resp = await remoteInstance.methods
             .claim(signData.data, signData.signatures)
             .send({ from: this.getEvmAccountName });
-          // console.log(resp);
-
+          
           await this.updateTeleports(this.accountName);
           await this.updateNativeTransactions();
           this.claiming = -1;

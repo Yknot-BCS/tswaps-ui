@@ -46,7 +46,7 @@ export default {
     async switchMetamaskNetwork(networkName) {
       let chainId = this.getEvmNetworkByName(networkName).chainId;
       chainId = "0x" + chainId.toString(16);
-      console.log("switchToSelectedEvm - chainId:", chainId);
+      // console.log("switchToSelectedEvm - chainId:", chainId);
       try {
         await ethereum.request({
           method: "wallet_switchEthereumChain",

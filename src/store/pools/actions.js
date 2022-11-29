@@ -75,8 +75,7 @@ export const updatePools = async function ({
     // append pool stats to pools
     for (const pool of formatPoolList) {
       if (statsResults.rows.find((t) => t.pair_id === pool.id)) {
-        // console.log(statsResults.rows.find(
-        //     t => t.pair_id === pool.id
+                //     t => t.pair_id === pool.id
         // ))
         let volume_24h = statsResults.rows.find(
           (t) => t.pair_id === pool.id
@@ -329,8 +328,7 @@ export const updateUserLiquidityPools = async function (
 ) {
   try {
     if (accountName !== null) {
-      // console.log("Account: " + accountName);
-      let lpTokens = [];
+            let lpTokens = [];
 
       // TODO calculate impermanent loss
       const lpPositions = await this.$api.getTableRows({
@@ -345,8 +343,7 @@ export const updateUserLiquidityPools = async function (
 
       const allpools = getters.getPools;
       const userPools = [];
-      // console.log(lpTokens)
-
+      
       for (const token of lpTokens) {
         let balance_asset = token.balance;
         let temp_pool = allpools.find(
@@ -363,8 +360,7 @@ export const updateUserLiquidityPools = async function (
 
           // Calculate current cost = LP * (Reserve0 / Reserve_total)
           if (temp_pool.liquidity && lpBalance > 0) {
-            // console.log(temp_pool)
-            if (temp_pool.protocol === "uniswap") {
+                        if (temp_pool.protocol === "uniswap") {
               currentCost0 =
                 lpBalance *
                 (temp_pool.reserve0.quantity /
@@ -376,8 +372,7 @@ export const updateUserLiquidityPools = async function (
                 temp_pool.reserve0.precision,
                 temp_pool.reserve0.symbol
               );
-              // console.log("currentCost0: " + currentCost0)
-              currentCost1 =
+                            currentCost1 =
                 lpBalance *
                 (temp_pool.reserve1.quantity /
                   Math.sqrt(
@@ -388,8 +383,7 @@ export const updateUserLiquidityPools = async function (
                 temp_pool.reserve1.precision,
                 temp_pool.reserve1.symbol
               );
-              // console.log("currentCost1: " + currentCost1)
-            } else if (temp_pool.protocol === "curve") {
+                          } else if (temp_pool.protocol === "curve") {
               currentCost0 =
                 lpBalance *
                 (temp_pool.reserve0.quantity /
@@ -399,8 +393,7 @@ export const updateUserLiquidityPools = async function (
                 temp_pool.reserve0.precision,
                 temp_pool.reserve0.symbol
               );
-              // console.log("currentCost0: " + currentCost0)
-              currentCost1 =
+                            currentCost1 =
                 lpBalance *
                 (temp_pool.reserve1.quantity /
                   (temp_pool.reserve0.quantity + temp_pool.reserve1.quantity));
@@ -409,8 +402,7 @@ export const updateUserLiquidityPools = async function (
                 temp_pool.reserve1.precision,
                 temp_pool.reserve1.symbol
               );
-              // console.log("currentCost1: " + currentCost1)
-            }
+                          }
             userPools.push({
               ...temp_pool,
               lpBalance: lpBalance,

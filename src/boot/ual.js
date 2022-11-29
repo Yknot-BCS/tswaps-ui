@@ -13,12 +13,10 @@ export default async ({ Vue, store }) => {
       localStorage.getItem("selectedChain")
     );
   } else {
-    console.log("Set chain to telos");
     await store.dispatch("blockchains/updateCurrentChain", "TELOS");
   }
   const setupAuth = () => {
     let getCurrentChain = store.getters["blockchains/getCurrentChain"];
-    // console.log(getCurrentChain.NETWORK_NAME);
     const chain = {
       chainId: getCurrentChain.NETWORK_CHAIN_ID,
       rpcEndpoints: [

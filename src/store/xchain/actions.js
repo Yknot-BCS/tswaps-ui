@@ -11,16 +11,14 @@ export const setTPortTokens = async function ({ commit, getters }) {
             show_payer: false,
         });
         for (let asset of tableResults.rows) {
-            // console.log("Asset: ", asset);
-            asset.token = {
+                        asset.token = {
                 sym: this.$getSymFromAsset(asset.token),
                 decimals: this.$getDecimalFromAsset(asset.token),
                 contract: asset.token.contract,
             };
             tokens.push(asset);
         }
-        // console.log("TPort Tokens:", tokens);
-        commit("updateTPortTokens", { tokens });
+                commit("updateTPortTokens", { tokens });
     } catch (error) {
         commit("general/setErrorMsg", error.message || error, { root: true });
     }
@@ -56,8 +54,7 @@ export const setTeleports = async function ({ commit }, account) {
             })
             .sort((a, b) => (a.time < b.time ? 1 : -1));
 
-        // console.log("Teleports:", teleports);
-        commit("updateTeleports", { teleports });
+                commit("updateTeleports", { teleports });
     } catch (error) {
         commit("general/setErrorMsg", error.message || error, { root: true });
     }
@@ -74,8 +71,7 @@ export const updateReclaimableTokens = async function (
             scope: account,
             table: "wallets",
         });
-        // console.log(res.rows)
-
+        
         commit("setReclaimableTokens", { reclaimableTokens: res.rows });
     } catch (error) {
         console.error("updateReclaimableTokens");

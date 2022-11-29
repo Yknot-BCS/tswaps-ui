@@ -56,7 +56,6 @@ const getCurrentChainAccount = async function (accountName) {
 
 const setAPI = async function (store) {
   // TODO really slower than mixin, but so much cleaner
-  console.log("setAPI");
   if (localStorage.getItem("selectedChain") != null) {
     await store.dispatch(
       "blockchains/updateCurrentChain",
