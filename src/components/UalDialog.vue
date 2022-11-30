@@ -6,7 +6,7 @@
   >
     <q-list>
       <q-item
-        v-for="(wallet, idx) in $ual.authenticators"
+        v-for="(wallet, idx) in $ual().authenticators"
         :key="wallet.getStyle().text"
         v-ripple
         :style="{

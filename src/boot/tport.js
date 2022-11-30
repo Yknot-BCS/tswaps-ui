@@ -47,11 +47,11 @@ const testnetList = [
   {
     name: "Ethereum",
     remoteId: 1,
-    chainName: "Ropsten Test Network",
-    chainId: 3,
-    rpcUrls: ["https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"],
+    chainName: "Gorli",
+    chainId: 5,
+    rpcUrls: ["https://eth-goerli.public.blastapi.io"],
     nativeCurrency: {
-      name: "Ropsten ETH",
+      name: "ETH",
       symbol: "ETH",
       decimals: 18,
     },

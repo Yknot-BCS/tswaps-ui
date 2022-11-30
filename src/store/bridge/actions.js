@@ -21,7 +21,7 @@ export const updateAmount = async function ({ commit }, amount) {
 export const updateToChain = async function ({ commit }, chain) {
   try {
     commit("setToChain", chain);
-    if (chain.NETWORK_NAME == "TELOS") {
+    if (["TELOS","EOS","WAX"].includes(chain.NETWORK_NAME)) {
       commit("setToNative", true);
     } else {
       commit("setToNative", false);
@@ -100,11 +100,11 @@ export const sendToEvm = async function ({ commit, getters, rootGetters }) {
       },
     },
   ];
-  console.log("Actions: ", actions);
+  // console.log("Actions: ", actions);
 
   try {
     transaction = await this.$api.signTransaction(actions);
-    console.log(transaction);
+    // console.log(transaction);
     return transaction;
   } catch (error) {
     console.log("Error bridging tokens.", error);
@@ -141,7 +141,7 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
             await remoteInstance.methods.decimals().call()
           )
           .toString();
-        console.log("weiAmount:", weiAmount);
+        // console.log("weiAmount:", weiAmount);
         try {
           const resp = await remoteInstance.methods
             .teleport(accountName, weiAmount, 0)
@@ -154,3 +154,40 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
     }
   }
 };
+
+export const sendAntelopeTelosd = async function({ commit, getters, rootGetters },contract) {
+  if (contract == null)
+    contract = "bridge.start";
+  // console.log("Sending to contract:",contract);
+  var transaction = null;
+  let token = getters.getToken;
+  let amount = getters.getAmount;
+  let accountName = rootGetters["account/accountName"];
+  let toAccount = getters.getToAccount;
+  let toChain = getters.getToChain;
+  let memo = getters.getMemo;
+    const actions = [
+    {
+      account: token.contract,
+      name: "transfer",
+      data: {
+        from: accountName.toLowerCase(),
+        to: contract,
+        quantity: `${parseFloat(amount).toFixed(
+          token.decimals
+        )} ${token.symbol}`,
+        memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}|${memo}`,
+        // memo: `${toAccount}@${toChain.NETWORK_NAME.toLowerCase()}`,
+      }
+    }
+  ];
+  try {
+    transaction = await this.$api.signTransaction(actions);
+    // console.log(transaction);
+    return transaction;
+  } catch (error) {
+    console.log("Error bridging tokens.", error);
+    commit("general/setErrorMsg", error.message || error, { root: true });
+    return transaction;
+  }
+}

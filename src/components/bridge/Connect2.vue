@@ -13,38 +13,12 @@
       </div>
       <div class="col-sm-4 col-xs-12">
         <div class="row justify-center">
-          <!-- Connect to EVM wallet with metamask: -->
-          <q-btn
-            v-if="
-              (!getEvmAccountName || getEvmAccountName === '') && !this.isNative
-            "
-            label="CONNECT WALLET"
-            @click="
-              connectWeb3();
-              switchMetamaskNetwork(selectedNetwork);
-            "
-            class="hover-accent"
-            color="positive"
-            outline
-            no-shadow
-            no-caps
-          />
+          
           <!-- Connect to telos wallet with ual -->
           <q-btn
-            v-else-if="!this.isAuthenticated && this.isNativeAndTelos"
+            v-if="!this.isAuthenticated"
             label="CONNECT WALLET"
             @click="showLogin = !showLogin"
-            class="hover-accent"
-            color="positive"
-            outline
-            no-shadow
-            no-caps
-          />
-          <!-- Connect to EOS and WAX wallet with ual -->
-          <q-btn
-            v-else-if="this.isNative && !this.isNativeAndTelos && getEvmAccountName == ''"
-            label="CONNECT WALLET"
-            @click="connectToEosWax"
             class="hover-accent"
             color="positive"
             outline
@@ -55,17 +29,8 @@
           <div
             class="evm-account col ellipsis cursor-pointer bordered text-center"
             style="max-width: 200px"
-            v-else-if="this.isAuthenticated && this.isNativeAndTelos"
+            v-else-if="this.isAuthenticated"
             @click="logout"
-          >
-            Disconnect
-          </div>
-          <!-- disconnect from EVM in vuex -->
-          <div
-            class="evm-account col ellipsis cursor-pointer bordered text-center"
-            style="max-width: 200px"
-            v-else-if="getEvmAccountName != '' && !this.isNative"
-            @click="setEthAccountName"
           >
             Disconnect
           </div>
@@ -78,7 +43,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import netSelector from "./NetSelector";
+import netSelector from "./NetSelector2";
 import metamask from "src/components/Metamask";
 import { copyToClipboard } from "quasar";
 import { ethers } from "ethers";
@@ -166,7 +131,7 @@ export default {
   },
   methods: {
     ...mapActions("account", ["setWalletBalances", "logout"]),
-    ...mapActions("tport", ["setAccountName", "updateTportTokenBalances"]),
+    ...mapActions("tport", ["setAccountName"]),
     ...mapActions("blockchains",["updateCurrentChain"]),
 
     // changeNetwork(network) {
@@ -174,8 +139,8 @@ export default {
     // },
 
     async updateBalance() {
-      const { injectedWeb3, web3 } = await this.$web3();
-      this.updateTportTokenBalances();
+      // const { injectedWeb3, web3 } = await this.$web3();
+      // this.updateTportTokenBalances();
     },
 
     async trySend() {
@@ -280,7 +245,7 @@ export default {
           },
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
 
@@ -306,18 +271,9 @@ export default {
     this.updateBalance();
   },
   watch: {
-    async selectedNetwork() {
-      if (!["TELOS","EOS","WAX"].includes(this.selectedNetwork)) {
-        this.connectWeb3();
-        this.switchMetamaskNetwork(this.selectedNetwork);
-      }
-    },
-    async getEvmChainId() {
+    accountName() {
       this.updateBalance();
-    },
-    async getEvmAccountName() {
-      this.updateBalance();
-    },
+    }
   },
 };
 </script>

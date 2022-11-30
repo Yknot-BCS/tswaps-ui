@@ -18,6 +18,6 @@ export default function () {
     fromChain: {},
     toAccount: "",
     toChain: {},
-    toNative: false,
+    toNative: true,
   };
 }

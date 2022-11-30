@@ -3,7 +3,7 @@
     <div class="input-outline row items-center">
       <div class="col-2 text-h6">{{ this.isFrom ? "From " : "To " }}</div>
 
-      <div class="col-sm-6 col-xs-10">
+      <div class="col-sm-4 col-xs-10">
         <net-selector
           :selectedNetwork="selectedNetwork"
           :networkOptions="networkOptions"
@@ -11,64 +11,15 @@
           @changeNetwork="$emit('update:selectedNetwork', $event)"
         />
       </div>
-      <div class="col-sm-4 col-xs-12">
-        <div class="row justify-center">
-          <!-- Connect to EVM wallet with metamask: -->
-          <q-btn
-            v-if="
-              (!getEvmAccountName || getEvmAccountName === '') && !this.isNative
-            "
-            label="CONNECT WALLET"
-            @click="
-              connectWeb3();
-              switchMetamaskNetwork(selectedNetwork);
-            "
-            class="hover-accent"
-            color="positive"
-            outline
-            no-shadow
-            no-caps
-          />
-          <!-- Connect to telos wallet with ual -->
-          <q-btn
-            v-else-if="!this.isAuthenticated && this.isNativeAndTelos"
-            label="CONNECT WALLET"
-            @click="showLogin = !showLogin"
-            class="hover-accent"
-            color="positive"
-            outline
-            no-shadow
-            no-caps
-          />
-          <!-- Connect to EOS and WAX wallet with ual -->
-          <q-btn
-            v-else-if="this.isNative && !this.isNativeAndTelos && getEvmAccountName == ''"
-            label="CONNECT WALLET"
-            @click="connectToEosWax"
-            class="hover-accent"
-            color="positive"
-            outline
-            no-shadow
-            no-caps
-          />
-          <!-- Disconnect from telos with ual -->
-          <div
-            class="evm-account col ellipsis cursor-pointer bordered text-center"
-            style="max-width: 200px"
-            v-else-if="this.isAuthenticated && this.isNativeAndTelos"
-            @click="logout"
-          >
-            Disconnect
-          </div>
-          <!-- disconnect from EVM in vuex -->
-          <div
-            class="evm-account col ellipsis cursor-pointer bordered text-center"
-            style="max-width: 200px"
-            v-else-if="getEvmAccountName != '' && !this.isNative"
-            @click="setEthAccountName"
-          >
-            Disconnect
-          </div>
+      <div class="col-sm-6 col-xs-12">
+        <div class="row justify-center items-center">
+          <q-input
+            outlined
+            label="Receiving account"
+            :input-style="{ fontSize: '11px' }"
+            @input="setToAccount($event)"
+            :value="getToAccount"
+          ></q-input>
         </div>
       </div>
     </div>
@@ -77,8 +28,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import netSelector from "./NetSelector";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import netSelector from "./NetSelector2";
 import metamask from "src/components/Metamask";
 import { copyToClipboard } from "quasar";
 import { ethers } from "ethers";
@@ -107,6 +58,7 @@ export default {
   },
   computed: {
     ...mapGetters("account", ["isAuthenticated", "accountName", "wallet"]),
+    ...mapGetters("bridge",["getToAccount"]),
     ...mapGetters("tport", [
       "getEvmAccountName",
       "getEvmNetwork",
@@ -168,6 +120,7 @@ export default {
     ...mapActions("account", ["setWalletBalances", "logout"]),
     ...mapActions("tport", ["setAccountName", "updateTportTokenBalances"]),
     ...mapActions("blockchains",["updateCurrentChain"]),
+    ...mapMutations("bridge",["setToAccount"]),
 
     // changeNetwork(network) {
     //   this.$emit("update:selectedNetwork", network);
@@ -280,7 +233,7 @@ export default {
           },
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
 
@@ -306,12 +259,6 @@ export default {
     this.updateBalance();
   },
   watch: {
-    async selectedNetwork() {
-      if (!["TELOS","EOS","WAX"].includes(this.selectedNetwork)) {
-        this.connectWeb3();
-        this.switchMetamaskNetwork(this.selectedNetwork);
-      }
-    },
     async getEvmChainId() {
       this.updateBalance();
     },

@@ -10,7 +10,7 @@
     <div class="col row justify-end">
       <dropdown-btn />
     </div>
-    <coin-dialog :showCoinDialog.sync="showCoinDialog" />
+    <coin-dialog :showCoinDialog.sync="showCoinDialog" :antelope="this.antelope"/>
   </div>
 </template>
 
@@ -20,6 +20,7 @@ import dropdownBtn from "src/components/DropdownBtn";
 import tokenAvatar from "src/components/TokenAvatar";
 import coinDialog from "./CoinDialog";
 export default {
+  props: ["antelope"],
   components: { dropdownBtn, tokenAvatar, coinDialog },
   data() {
     return {

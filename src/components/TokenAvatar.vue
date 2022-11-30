@@ -63,6 +63,7 @@ export default {
           }
         } else {
           switch (token) {
+            case "BNB"  : return "/tokens/bnb.svg";
             case "PETH"  : return "/tokens/peth.png"
             case "PBTC"  : return "/tokens/pbtc.png";
             case "PUSDT" : return "https://raw.githubusercontent.com/T-Starter/T-Starter-images/master/icons/pUSDT.png";

@@ -190,21 +190,17 @@ export default {
         if (injectedWeb3) {
           if (this.wrongNetwork) this.remoteBalance = 0;
           else {
-            // console.log("ERC20 ABI:", this.$erc20Abi, "Chain data:", chainData);
-            const token = this.getTPortTokensBySym(this.selectedTokenSym);
-            // console.log("TPort token:", token);
-            if (typeof token === "undefined") {
+                        const token = this.getTPortTokensBySym(this.selectedTokenSym);
+                        if (typeof token === "undefined") {
               console.error("TPort Token not found");
             } else {
               const remoteContractAddress = token.remote_contracts.find(
                 (el) => el.key === this.getEvmRemoteId
               ).value;
-              // console.log("remoteContractAddress:", remoteContractAddress);
-              this.remoteContractInstance = new web3.eth.Contract(
+                            this.remoteContractInstance = new web3.eth.Contract(
                 this.$erc20Abi,
                 remoteContractAddress
               ); // TODO Add check to validate abi
-              //   console.log("remoteInstance:", remoteInstance);
               const balance = await this.remoteContractInstance.methods
                 .balanceOf(this.getEvmAccountName)
                 .call();
@@ -280,7 +276,7 @@ export default {
           },
         },
       ];
-      console.log("Actions: ", actions);
+      // console.log("Actions: ", actions);
 
       transaction = await this.$store.$api.signTransaction(actions);
       if (transaction) {
@@ -299,8 +295,7 @@ export default {
     async addTokenToMetamask() {
       const token = this.getTPortTokensBySym(this.selectedTokenSym);
       let tokenAddress = null;
-      // console.log("TPort token:", token);
-      if (typeof token === "undefined") {
+            if (typeof token === "undefined") {
         console.error("TPort Token not found");
       } else {
         tokenAddress = token.remote_contracts.find(
@@ -325,7 +320,7 @@ export default {
           },
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
 

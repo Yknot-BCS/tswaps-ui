@@ -1,4 +1,5 @@
 import { Api, JsonRpc } from "eosjs";
+import axios from 'axios';
 
 const signTransaction = async function (actions) {
   actions.forEach((action) => {
@@ -48,9 +49,13 @@ const getAccount = async function (accountName) {
   return await rpc.get_account(accountName);
 };
 
+const getCurrentChainAccount = async function (accountName) {
+  var rpc = this.$defaultApi.rpc;
+  return await rpc.get_account(accountName);
+};
+
 const setAPI = async function (store) {
   // TODO really slower than mixin, but so much cleaner
-  console.log("setAPI");
   if (localStorage.getItem("selectedChain") != null) {
     await store.dispatch(
       "blockchains/updateCurrentChain",
@@ -59,10 +64,15 @@ const setAPI = async function (store) {
   } else {
     await store.dispatch("blockchains/updateCurrentChain", "TELOS");
   }
+  // console.log(store);
   let getCurrentChain = store.getters["blockchains/getCurrentChain"];
   const rpc = new JsonRpc(
     `${getCurrentChain.NETWORK_PROTOCOL}://${getCurrentChain.NETWORK_HOST}:${getCurrentChain.NETWORK_PORT}`
   );
+  // console.log(`${getCurrentChain.NETWORK_PROTOCOL}://${getCurrentChain.NETWORK_HOST}:${getCurrentChain.NETWORK_PORT}`);
+  const hyperion = axios.create({
+    baseURL: getCurrentChain.HYPERION_ENDPOINT,
+  });
   store["$defaultApi"] = new Api({
     rpc,
     textDecoder: new TextDecoder(),
@@ -75,6 +85,8 @@ const setAPI = async function (store) {
     getAccount: getAccount.bind(store),
     getRpc: getRpc.bind(store),
     setAPI: setAPI.bind(store),
+    getCurrentChainAccount: getCurrentChainAccount.bind(store),
+    hyperion: hyperion,
   };
 };
 

@@ -23,7 +23,16 @@ export function getTeleports(state) {
   return state.teleports;
 }
 
+export function getEvmTransactions(state) {
+  return state.evmTransactions;
+}
+
+export function isEvmTransactionsUpdating(state) {
+  return state.evmTransactionsUpdating;
+}
+
 export const getTPortTokens = ({ tportTokens }) => tportTokens;
+export const getTelosDTokens = ({ telosDTokens }) => telosDTokens;
 
 export const getTPortTokensBySym =
   ({ tportTokens }) =>

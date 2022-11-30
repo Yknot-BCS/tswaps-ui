@@ -4,7 +4,7 @@ export const login = async function (
   { commit, dispatch },
   { idx, account, returnUrl }
 ) {
-  const authenticator = this.$ual.authenticators[idx];
+  const authenticator = this.$ual().authenticators[idx];
   try {
     commit("setLoadingWallet", authenticator.getStyle().text);
     await authenticator.init();
@@ -23,10 +23,11 @@ export const login = async function (
       this.$ualUser = account;
       this.$type = "ual";
       commit("setAccountName", accountName);
+      // await authenticator.logout();
       localStorage.setItem("autoLogin", authenticator.constructor.name);
       localStorage.setItem("account", accountName);
       localStorage.setItem("returning", true);
-      // dispatch("getAccountProfile");
+      dispatch("getAccountProfile");
     }
   } catch (e) {
     const error =
@@ -34,14 +35,14 @@ export const login = async function (
       e.message ||
       e.reason;
     commit("general/setErrorMsg", error, { root: true });
-    console.log("Login error: ", error);
+    localStorage.clear();
   } finally {
     commit("setLoadingWallet");
   }
 };
 
-export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
-  const { authenticator, idx } = getAuthenticator(this.$ual);
+export const autoLogin = async function ({ dispatch, commit, rootGetters }, returnUrl) {
+  const { authenticator, idx } = getAuthenticator(this.$ual());
   if (authenticator) {
     commit("setAutoLogin", true);
     await dispatch("login", {
@@ -51,6 +52,8 @@ export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
     });
     commit("setAutoLogin", false);
   }
+  if (authenticator && authenticator.chainId != rootGetters["bridge/getFromChain"].NETWORK_CHAIN_ID)
+    return dispatch("logout");
 };
 
 const getAuthenticator = function (ual, wallet = null) {
@@ -65,7 +68,7 @@ const getAuthenticator = function (ual, wallet = null) {
 };
 
 export const logout = async function ({ commit }) {
-  const { authenticator } = getAuthenticator(this.$ual);
+  const { authenticator } = getAuthenticator(this.$ual());
   try {
     authenticator && (await authenticator.logout());
   } catch (error) {
@@ -74,7 +77,7 @@ export const logout = async function ({ commit }) {
   commit("setProfile", undefined);
   commit("setAccountName");
   this.$type = "";
-  localStorage.removeItem("autoLogin");
+  localStorage.clear();
 
   if (this.$router.currentRoute.path !== "/") {
     //this.$router.push({ path: "/bridge" });
@@ -122,6 +125,18 @@ export const accountExists = async function (
   }
 };
 
+export const accountExistsOnCurrentChain = async function (
+  { commit, dispatch },
+  accountName
+) {
+  try {
+    const account = await this.$api.getCurrentChainAccount(accountName);
+    return !!account;
+  } catch (e) {
+    return false;
+  }
+};
+
 export const accountExistsOnChain = async function (
   { commit, dispatch, rootGetters },
   payload
@@ -138,7 +153,6 @@ export const accountExistsOnChain = async function (
   } else {
     newChain = blockchains.find((el) => el.TEST_NETWORK === false);
   }
-  // console.log(newChain)
 
   //set rpc
   const rpc = new JsonRpc(
@@ -165,8 +179,7 @@ export const getChainWalletTable = async function (
     });
 
     let contractWalletTbl = tableResults.rows;
-    // console.log(contractWalletTbl)
-
+    
     // Set each token on state
     for (const token_info of contractWalletTbl) {
       let token_sym = this.$chainToSym(token_info.balance);
@@ -199,8 +212,7 @@ export const resetWallet = async function ({ commit, getters, dispatch }) {
 
 // reload all wallet info
 export const reloadWallet = async function ({ dispatch }, account) {
-  // console.log({ account });
-};
+  };
 
 // reset liquid
 export const resetLiquid = async function ({ commit, getters, dispatch }) {
@@ -224,8 +236,7 @@ export const getChainAccountStakeInfo = async function (
         reverse: false,
         show_payer: false,
       });
-      // console.log(accountsResult.rows[0]);
-
+      
       if (accountsResult.rows[0] !== undefined) {
         return accountsResult.rows[0];
       } else {
@@ -257,8 +268,7 @@ export const getChainTiersTable = async function ({
     });
 
     if (tiersTable.rows.length > 0) {
-      // console.log(tiersTable.rows);
-      return tiersTable.rows;
+            return tiersTable.rows;
     } else {
       return [];
     }

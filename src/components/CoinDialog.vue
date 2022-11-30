@@ -186,9 +186,9 @@ export default {
 
     filterTokens() {
       // TODO Show all when no input
-      console.log("Len: ", this.search.length);
+      // console.log("Len: ", this.search.length);
       if (this.search.length > 0) {
-        console.log("text with filter");
+        // console.log("text with filter");
         this.filterByText(this.getTokens);
       } else this.filteredTokens = this.getTokens;
     },

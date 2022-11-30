@@ -45,17 +45,24 @@ export default {
   mixins: [ual],
   props: ["showNetDialog", "isFrom"],
   computed: {
-    ...mapGetters("blockchains", ["getAllPossibleChains", "getCurrentChain", "getNetworkByName"]),
+    ...mapGetters("blockchains", ["getAllPossibleChains", "getCurrentChain"]),
     ...mapGetters("bridge", ["getFromChain", "getToChain", "getToken"]),
     ...mapGetters("account", ["isAuthenticated", "accountName"]),
     selectedChain() {
       return this.isFrom ? this.getFromChain : this.getToChain;
     },
     chainOptions() {
-      const exclude = ["EOS", "WAX"];
-      return this.getAllPossibleChains.filter((el)=>{
-        return !exclude.includes(el.NETWORK_NAME)
-      });
+      const choices = ["TELOS", "EOS", "WAX"];
+      if (this.isFrom) {
+        return this.getAllPossibleChains.filter((el)=>{
+          return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME;
+        });
+      }
+      else {
+        return this.getAllPossibleChains.filter((el)=>{
+          return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME && this.getToChain.NETWORK_NAME != el.NETWORK_NAME;
+        });
+      }
     },
   },
   methods: {
@@ -68,26 +75,24 @@ export default {
         this.isFrom &&
         this.getFromChain.NETWORK_NAME !== chain.NETWORK_NAME
       ) {
-        this.updateFromChain(chain);
-        if (chain.NETWORK_NAME != "TELOS" && this.getToChain.NETWORK_NAME != "TELOS") {
-          this.updateToChain(this.getAllPossibleChains.filter((el)=>el.NETWORK_NAME == "TELOS")[0]);
+        if (this.isAuthenticated) {
+          this.logout();
         }
-        else if (chain.NETWORK_NAME == "TELOS" && this.getToChain.NETWORK_NAME == "TELOS") {
-          this.updateToChain(this.getAllPossibleChains.filter((el)=>el.NETWORK_NAME == "TELOS EVM")[0]);
-          
+        // this.updateToChain(this.getFromChain);
+        this.updateFromChain(chain);
+        this.updateCurrentChain(chain.NETWORK_NAME);
+        if (this.getFromChain.NETWORK_NAME == this.getToChain.NETWORK_NAME) {
+          const choices = ["TELOS", "EOS", "WAX"];
+          var optionsLeft = this.getAllPossibleChains.filter((el)=>{
+            return choices.includes(el.NETWORK_NAME) && this.getFromChain.NETWORK_NAME != el.NETWORK_NAME;
+          });
+          this.updateToChain(optionsLeft[0]);
         }
       } else if (
         !this.isFrom &&
         this.getToChain.NETWORK_NAME !== chain.NETWORK_NAME
       ) {
-        // this.updateFromChain(this.getToChain);
         this.updateToChain(chain);
-        if (chain.NETWORK_NAME == "TELOS" && this.getFromChain.NETWORK_NAME == "TELOS") {
-          this.updateFromChain(this.getAllPossibleChains.filter((el)=>el.NETWORK_NAME == "TELOS EVM")[0]);
-        }
-        if (chain.NETWORK_NAME != "TELOS" && this.getFromChain.NETWORK_NAME != "TELOS") {
-          this.updateFromChain(this.getAllPossibleChains.filter((el)=>el.NETWORK_NAME == "TELOS")[0]);
-        }
       }
       this.$emit("update:showNetDialog", false);
     },

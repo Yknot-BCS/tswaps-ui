@@ -4,20 +4,26 @@
       <div class="row justify-center q-mt-xs padding-xxl">
         <div class="col-7">
           <div class="text-h4 text-center">
-            Effortlessly bridge your tokens between telos EVM and Native.
+            Token Bridge
           </div>
         </div>
       </div>
-
-      <div class="row justify-center q-mb-md">
-        <bridge-external />
-      </div>
+      
+        <div class="row items-center q-mt-xs q-mb-lg">
+          <div class="col-5 text-right">Between Native and EVM chains</div>
+          <q-toggle
+            v-model="antelopeBridge"
+            class="col-2 justify-center"
+          />
+          <div class="col-5 text-left">Between Antelope chains</div>
+        </div>
 
       <div class="row justify-center q-mt-xs q-mb-lg">
-        <bridge-stepper />
+        <bridge-stepper v-if="!antelopeBridge"/>
+        <bridge-stepper2 v-else-if="antelopeBridge"/>
       </div>
 
-      <div class="row justify-center q-mt-lg q-mb-lg">
+      <div v-if="!antelopeBridge" class="row justify-center q-mt-lg q-mb-lg">
         <bridge-dashboard />
       </div>
     </section>
@@ -28,20 +34,21 @@
 import { mapGetters, mapActions } from "vuex";
 import metamask from "src/components/Metamask";
 import bridgeStepper from "../components/bridge/bridgeStepper.vue";
+import bridgeStepper2 from "../components/bridge/bridgeStepper2.vue";
 import bridgeDashboard from "src/components/bridge/TeleportDash.vue";
-import bridgeExternal from "src/components/bridge/ExternalBridge.vue";
 
 export default {
   components: {
     bridgeStepper,
+    bridgeStepper2,
     bridgeDashboard,
-    bridgeExternal,
   },
   mixins: [metamask],
   data() {
     return {
       selectedTokenSym: "START",
       selectedNetwork: "ETHEREUM",
+      antelopeBridge: false,
     };
   },
   computed: {
@@ -90,4 +97,11 @@ h2 {
   padding-bottom: 60px;
   padding-top: 60px;
 }
+
+.bridgeSwitch {
+  width: 700px;
+  max-width: 95vw;
+  border-radius: 50px !important;
+}
+
 </style>

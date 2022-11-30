@@ -121,10 +121,10 @@ export default {
       newTokenSymbol: "",
     };
   },
-  props: ["showCoinDialog", "isFrom", "isSwap"],
+  props: ["showCoinDialog", "isFrom", "isSwap", "antelope"],
   computed: {
     ...mapGetters("account", ["isAuthenticated", "accountName"]),
-    ...mapGetters("tport", ["getTPortTokens"]),
+    ...mapGetters("tport", ["getTPortTokens", "getTelosDTokens"]),
     ...mapGetters("blockchains", ["getAllPossibleChains", "getCurrentChain"]),
     ...mapGetters("bridge", [
       "getToChain",
@@ -137,17 +137,15 @@ export default {
       if (this.filteredTokens.length > 0) {
         return this.filteredTokens;
       } else {
-        return this.getTPortTokens;
+        // return this.getTPortTokens;
+        var tokens = [...this.getTPortTokens];
+        const telosDChains = ["TELOS", "EOS"];
+        var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
+        if (telosdTrx)
+          tokens.push(...this.getTelosDTokens);
+        return tokens;
       }
     },
-    // tokensForValidPair() {
-    //   if (this.isSwap) {
-    //     if (this.isFrom) return this.getToToken.toTokens;
-    //     else return this.getFromToken.toTokens;
-    //   } else {
-    //     return [];
-    //   }
-    // }
   },
   methods: {
     ...mapActions("swap", ["updateSwapPool", "updateEstimate"]),
@@ -157,8 +155,11 @@ export default {
       "updateTPortTokens",
       "updateTportTokenBalances",
       "updateTportTokenBalancesEvm",
+      "updateTelosDTokens",
+      "updateTelosDTokenBalances"
     ]),
     ...mapActions("bridge", ["updateBridgeToken"]),
+    ...mapActions("blockchains",["updateCurrentChain"]),
 
     updateSelectedCoin(token) {
       this.updateBridgeToken(token);
@@ -166,11 +167,16 @@ export default {
 
     filterTokens() {
       // TODO Show all when no input
-      console.log("Len: ", this.search.length);
+      // console.log("Len: ", this.search.length);
+      var tokens = [...this.getTPortTokens];
+      const telosDChains = ["TELOS", "EOS"];
+      var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
+      if (telosdTrx)
+        tokens.push(...this.getTelosDTokens);
       if (this.search.length > 0) {
-        console.log("text with filter");
-        this.filterByText(this.getTPortTokens);
-      } else this.filteredTokens = this.getTPortTokens;
+        // console.log("text with filter");
+        this.filterByText(tokens);
+      } else this.filteredTokens = tokens;
     },
     filterByText(tokens) {
       this.filteredTokens = tokens.filter((token) => {
@@ -180,23 +186,37 @@ export default {
         );
       });
     },
-    // Used in token list with :class="isValidToken(token) ? '' : 'greyItem'"
-    // isValidToken(token) {
-    //   const res = this.tokensForValidPair?.find(
-    //     el =>
-    //       el.symbol.toLowerCase().includes(token.symbol.toLowerCase()) &&
-    //       el.contract.toLowerCase().includes(token.contract.toLowerCase())
-    //   );
-    //   return res !== undefined;
-    // },
   },
   async mounted() {
+    // console.log("mount start");
+    const telosDChains = ["TELOS", "EOS"];
+    var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
     // await this.updatePools();
     // await this.updateAllTokensBalances(this.accountName);
-    await this.updateTPortTokens();
-    this.getToNative
-      ? this.updateTportTokenBalancesEvm()
-      : this.updateTportTokenBalances();
+    if (this.antelope == null)
+      this.antelope = false;
+    // console.log("Is Antelope:",this.antelope);
+    if (this.antelope) {
+      // console.log("update chain");
+      await this.updateCurrentChain(this.getFromChain.NETWORK_NAME);
+      await this.$store.$api.setAPI(this.$store);
+      await this.updateTPortTokens({contract:"bridge.start",chain:this.getToChain.NETWORK_NAME.toLowerCase()});
+      if (telosdTrx) {
+        await this.updateTelosDTokens();
+      }
+    }
+    else {
+      await this.updateTPortTokens();
+    }
+    if (!(["TELOS", "EOS", "WAX"].includes(this.getFromChain.NETWORK_NAME))) {
+      await this.updateTportTokenBalancesEvm()
+    }
+    else {
+      await this.updateTportTokenBalances();
+      if (telosdTrx)
+        await this.updateTelosDTokenBalances();
+    }
+    // console.log("mount finish");
   },
 };
 </script>
