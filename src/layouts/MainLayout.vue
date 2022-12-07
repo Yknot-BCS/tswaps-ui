@@ -13,7 +13,7 @@
               width="35"
             />
             <div class="t-swaps-title text-h5">T-Swaps</div>
-            <q-badge label="V3 Beta" class="q-my-sm" />
+            <q-badge label="V3" class="q-my-sm" />
           </router-link>
         </div>
 
