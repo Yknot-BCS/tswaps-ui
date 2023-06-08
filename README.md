@@ -1,4 +1,4 @@
-# Telos Quasar Template (telos-template)
+# Tswaps
 
 A template for using Vue+Quasar to build a Telos webapp
 
