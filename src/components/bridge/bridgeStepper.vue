@@ -324,6 +324,7 @@ export default {
       this.updateFromChain(this.getToChain);
       this.$store.commit("bridge/setToChain", tempHolder);
       this.updateToChain(tempHolder);
+      this.updateTPortTokens();
     },
 
     formSubmitted() {
