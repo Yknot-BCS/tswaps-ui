@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 
 // Get evm bridge tokens from tokens table of tport.start
-export const updateTPortTokens = async function ({ commit, getters }, details) {
+export const updateTPortTokens = async function ({ commit, getters, rootGetters }, details) {
+    commit("setTPortTokens", { tokens: [] });
     var contract = null;
     var chain = null;
     if (details) {
@@ -25,17 +26,28 @@ export const updateTPortTokens = async function ({ commit, getters }, details) {
             reverse: false,
             show_payer: false,
         });
+        const bridge_toChain = rootGetters["bridge/getToChain"];
+        const tport_chains = getters.getEvmNetworkList;
+        let tport_chain = tport_chains.find((el) => el.name.toUpperCase() === bridge_toChain.NETWORK_NAME.toUpperCase());
+        if (tport_chain == null) {
+            const bridge_fromChain = rootGetters["bridge/getFromChain"];
+            tport_chain = tport_chains.find((el) => el.name.toUpperCase() === bridge_fromChain.NETWORK_NAME.toUpperCase());
+        }
+        const tport_remoteId = tport_chain.remoteId;
         for (let asset of tableResults.rows) {
-            if ('token_info' in asset)
-                asset.token = asset.token_info;
-            asset = {
-                ...asset,
-                symbol: this.$getSymFromAsset(asset.token),
-                decimals: this.$getDecimalFromAsset(asset.token),
-                contract: asset.token.contract,
-                amount: 0,
-            };
-            tokens.push(asset);
+            const availableRemoteContracts = asset.remote_contracts.map((el) => el.key);
+            if (availableRemoteContracts.includes(tport_remoteId)) {
+                if ('token_info' in asset)
+                    asset.token = asset.token_info;
+                asset = {
+                    ...asset,
+                    symbol: this.$getSymFromAsset(asset.token),
+                    decimals: this.$getDecimalFromAsset(asset.token),
+                    contract: asset.token.contract,
+                    amount: 0,
+                };
+                tokens.push(asset);
+            }
         }
         commit("setTPortTokens", { tokens });
     } catch (error) {
@@ -328,17 +340,17 @@ export const updateTportTokenBalancesEvm = async function (
                         )
                             balance = 0;
                         else {
-                                                        if (typeof token === "undefined") {
+                            if (typeof token === "undefined") {
                                 console.error("TPort Token not found");
                             } else {
                                 const remoteContractAddress = token.remote_contracts.find(
                                     (el) => el.key === getters.getEvmRemoteId
                                 ).value;
-                                                                const remoteInstance = new web3.eth.Contract(
+                                const remoteInstance = new web3.eth.Contract(
                                     this._vm.$erc20Abi,
                                     remoteContractAddress
                                 ); // TODO Add check to validate abi
-                                                                const remotebalance = await remoteInstance.methods
+                                const remotebalance = await remoteInstance.methods
                                     .balanceOf(getters.getEvmAccountName)
                                     .call();
                                 balance = Number(
