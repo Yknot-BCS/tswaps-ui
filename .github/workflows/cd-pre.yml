@@ -1,8 +1,8 @@
 name: Deploy Stage
 
 on:
-  push:
-    # branches: [stage]
+  # push:
+  # branches: [stage]
 
   workflow_dispatch:
 
