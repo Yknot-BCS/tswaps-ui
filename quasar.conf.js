@@ -80,6 +80,7 @@ module.exports = function (/* ctx */) {
         XCHAIN_ADDRESS: process.env.XCHAIN_ADDRESS,
         POOL_BLACKLIST: process.env.POOL_BLACKLIST,
         BACKEND_ENDPOINT: process.env.BACKEND_ENDPOINT,
+        BRIDGE_SIGNATURES_REQUIRED: process.env.BRIDGE_SIGNATURES_REQUIRED,
       },
 
       // transpile: false,

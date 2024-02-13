@@ -118,7 +118,7 @@ export const updateTeleports = async function ({ commit }, account) {
 
       let teleports = [];
       res.rows.forEach((r) => {
-        r.processing = r.oracles.length <= process.env.BRIDGE_SIGNATURES_REQUIRED;
+        r.processing = r.oracles.length < process.env.BRIDGE_SIGNATURES_REQUIRED;
 
         // filter out cancelled teleports and push to array
         if (!cancelledIds.includes(r.id)) {
