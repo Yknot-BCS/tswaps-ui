@@ -21,7 +21,7 @@ export const updateAmount = async function ({ commit }, amount) {
 export const updateToChain = async function ({ commit }, chain) {
   try {
     commit("setToChain", chain);
-    if (["TELOS","EOS","WAX"].includes(chain.NETWORK_NAME)) {
+    if (["TELOS", "EOS", "WAX"].includes(chain.NETWORK_NAME)) {
       commit("setToNative", true);
     } else {
       commit("setToNative", false);
@@ -55,59 +55,58 @@ export const sendBridgeToken = async function ({
 };
 
 export const sendToEvm = async function ({ commit, getters, rootGetters }) {
-  var transaction = null;
-  let token = getters.getToken;
-  let amount = getters.getAmount;
-  let accountName = rootGetters["account/accountName"];
-  let evmRemoteId = rootGetters["tport/getEvmRemoteId"];
-  let evmAccountName = rootGetters["tport/getEvmAccountName"];
-  const actions = [
-    {
-      account: token.contract,
-      name: "transfer",
-      authorization: [
-        {
-          actor: accountName,
-          permission: "active",
-        },
-      ],
-      data: {
-        from: accountName,
-        to: process.env.TPORT_ADDRESS,
-        quantity: `${parseFloat(amount).toFixed(token.decimals)} ${
-          token.symbol
-        }`,
-        memo: "Teleport",
-      },
-    },
-    {
-      account: process.env.TPORT_ADDRESS,
-      name: "teleport",
-      authorization: [
-        {
-          actor: accountName,
-          permission: "active",
-        },
-      ],
-      data: {
-        from: accountName,
-        quantity: `${parseFloat(amount).toFixed(token.decimals)} ${
-          token.symbol
-        }`,
-        chain_id: evmRemoteId,
-        eth_address:
-          evmAccountName.replace("0x", "") + "000000000000000000000000",
-      },
-    },
-  ];
-  // console.log("Actions: ", actions);
-
   try {
+
+    var transaction = null;
+    let token = getters.getToken;
+    let amount = getters.getAmount;
+    let accountName = rootGetters["account/accountName"];
+    let evmRemoteId = rootGetters["tport/getEvmRemoteId"];
+    let evmAccountName = rootGetters["tport/getEvmAccountName"];
+    const actions = [
+      {
+        account: token.contract,
+        name: "transfer",
+        authorization: [
+          {
+            actor: accountName,
+            permission: "active",
+          },
+        ],
+        data: {
+          from: accountName,
+          to: process.env.TPORT_ADDRESS,
+          quantity: `${parseFloat(amount).toFixed(token.decimals)} ${token.symbol
+            }`,
+          memo: "Teleport",
+        },
+      },
+      {
+        account: process.env.TPORT_ADDRESS,
+        name: "teleport",
+        authorization: [
+          {
+            actor: accountName,
+            permission: "active",
+          },
+        ],
+        data: {
+          from: accountName,
+          quantity: `${parseFloat(amount).toFixed(token.decimals)} ${token.symbol
+            }`,
+          chain_id: evmRemoteId,
+          eth_address:
+            evmAccountName.replace("0x", "") + "000000000000000000000000",
+        },
+      },
+    ];
+    // console.log("Actions: ", actions);
+
     transaction = await this.$api.signTransaction(actions);
     // console.log(transaction);
     return transaction;
   } catch (error) {
-    console.log("Error bridging tokens.", error);
+    console.error("Error bridging tokens.", error);
     commit("general/setErrorMsg", error.message || error, { root: true });
     return transaction;
   }
@@ -146,7 +145,7 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
           const resp = await remoteInstance.methods
             .teleport(accountName, weiAmount, 0)
             .send({ from: evmAccountName });
-            return {transactionId: resp.transactionHash}
+          return { transactionId: resp.transactionHash }
         } catch (error) {
           console.log(error);
         }
@@ -155,7 +154,7 @@ export const sendToNative = async function ({ commit, getters, rootGetters }) {
   }
 };
 
-export const sendAntelopeTelosd = async function({ commit, getters, rootGetters },contract) {
+export const sendAntelopeTelosd = async function ({ commit, getters, rootGetters }, contract) {
   if (contract == null)
     contract = "bridge.start";
   // console.log("Sending to contract:",contract);
@@ -166,7 +165,7 @@ export const sendAntelopeTelosd = async function({ commit, getters, rootGetters 
   let toAccount = getters.getToAccount;
   let toChain = getters.getToChain;
   let memo = getters.getMemo;
-    const actions = [
+  const actions = [
     {
       account: token.contract,
       name: "transfer",
