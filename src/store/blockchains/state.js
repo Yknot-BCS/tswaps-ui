@@ -86,11 +86,11 @@ export default function () {
         TEST_NETWORK: true,
         NETWORK_CHAIN_ID:
           "f16b1833c747c43682f4386fca9cbb327929334a762755ebec17f6f23c9b8a12",
-        NETWORK_HOST: "https://waxtestnet.greymass.com",
+        NETWORK_HOST: "waxtestnet.greymass.com",
         NETWORK_PORT: 443,
         NETWORK_PROTOCOL: "https",
         NETWORK_EXPLORER: "https://wax-test.bloks.io",
-        HYPERION_ENDPOINT: "https://https://waxtestnet.greymass.com:443",
+        HYPERION_ENDPOINT: "https://waxtestnet.greymass.com:443",
         CREATE_ACCOUNT: "https://waxsweden.org/create-testnet-account/",
         BUY_START_URL:
           "https://wax.alcor.exchange/swap?output=START-token.start&input=WAX-eosio.token"
