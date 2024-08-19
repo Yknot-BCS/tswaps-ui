@@ -1,55 +1,70 @@
 export function setAccountName(state, payload) {
-    state.accountName = payload.accountName;
+  state.accountName = payload.accountName;
 }
 
 export function setChainId(state, payload) {
-    let chainId = `${payload.chainId}`;
-    if (chainId.substr(0, 2) === "0x") {
-        chainId = parseInt(chainId.substr(2), 16);
-    } else chainId = parseInt(chainId);
-    state.chainId = chainId;
+  let chainId = `${payload.chainId}`;
+  if (chainId.substr(0, 2) === "0x") {
+    chainId = parseInt(chainId.substr(2), 16);
+  } else chainId = parseInt(chainId);
+  state.chainId = chainId;
 }
 
 export function setNetworkList(state, { networkList }) {
-    state.networkList = networkList;
+  state.networkList = networkList;
 }
 
 export function setTPortTokens(state, { tokens }) {
-    state.tportTokens = tokens;
+  state.tportTokens = tokens;
 }
 
 export function setTelosDTokens(state, { tokens }) {
-    state.telosDTokens = tokens;
+  state.telosDTokens = tokens;
+}
+
+export function setStartBridgeTokens(state, { tokens }) {
+  state.startBridgeTokens = tokens;
 }
 
 export function setTeleports(state, { teleports }) {
-    state.teleports = teleports;
+  state.teleports = teleports;
 }
 
 export function setEvmTransactions(state, { transactions }) {
-    state.evmTransactions = transactions;
+  state.evmTransactions = transactions;
 }
 
 export function setEvmTransactionsUpdating(state, { updating }) {
-    state.evmTransactionsUpdating = updating;
+  state.evmTransactionsUpdating = updating;
 }
 
 export const setTokenAmount = (state, { token, amount }) => {
-    let new_token = state.tportTokens.find(
-        (t) => t.symbol === token.symbol && t.contract === token.contract
-    );
-    if (new_token !== undefined) {
-        new_token.amount = amount;
-    }
-    state.tportTokens = state.tportTokens.sort((a, b) => b.amount - a.amount);
+  let new_token = state.tportTokens.find(
+    (t) => t.symbol === token.symbol && t.contract === token.contract
+  );
+  if (new_token !== undefined) {
+    new_token.amount = amount;
+  }
+  state.tportTokens = state.tportTokens.sort((a, b) => b.amount - a.amount);
 };
 
 export const setTelosDTokenAmount = (state, { token, amount }) => {
-    let new_token = state.telosDTokens.find(
-        (t) => t.symbol === token.symbol && t.contract === token.contract
-    );
-    if (new_token !== undefined) {
-        new_token.amount = amount;
-    }
-    state.telosDTokens = state.telosDTokens.sort((a, b) => b.amount - a.amount);
+  let new_token = state.telosDTokens.find(
+    (t) => t.symbol === token.symbol && t.contract === token.contract
+  );
+  if (new_token !== undefined) {
+    new_token.amount = amount;
+  }
+  state.telosDTokens = state.telosDTokens.sort((a, b) => b.amount - a.amount);
 };
+
+export const setStartBridgeTokenAmount = (state, { token, amount }) => {
+  let new_token = state.startBridgeTokens.find(
+    (t) => t.symbol === token.symbol && t.contract === token.contract
+  );
+  if (new_token !== undefined) {
+    new_token.amount = amount;
+  }
+  state.startBridgeTokens = state.startBridgeTokens.sort((a, b) => b.amount - a.amount);
+};
+

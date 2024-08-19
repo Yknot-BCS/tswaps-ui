@@ -33,17 +33,18 @@ export function isEvmTransactionsUpdating(state) {
 
 export const getTPortTokens = ({ tportTokens }) => tportTokens;
 export const getTelosDTokens = ({ telosDTokens }) => telosDTokens;
+export const getStartBridgeTokens = ({ startBridgeTokens }) => startBridgeTokens;
 
 export const getTPortTokensBySym =
   ({ tportTokens }) =>
-  (sym) => {
-    return tportTokens.find((el) => el.symbol === sym);
-  };
+    (sym) => {
+      return tportTokens.find((el) => el.symbol === sym);
+    };
 
 export const getEvmNetworkByName =
   ({ networkList }) =>
-  (name) => {
-    return networkList.find(
-      (el) => el.name.toUpperCase() === name.toUpperCase()
-    );
-  };
+    (name) => {
+      return networkList.find(
+        (el) => el.name.toUpperCase() === name.toUpperCase()
+      );
+    };

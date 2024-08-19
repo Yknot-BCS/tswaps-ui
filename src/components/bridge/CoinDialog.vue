@@ -1,10 +1,5 @@
 <template>
-  <q-dialog
-    :value="showCoinDialog"
-    @input="$emit('update:showCoinDialog', $event)"
-    confirm
-    class="dialogContainer"
-  >
+  <q-dialog :value="showCoinDialog" @input="$emit('update:showCoinDialog', $event)" confirm class="dialogContainer">
     <q-card class="dialogCard">
       <div class="dialogHeader">
         <div class="row justify-between items-center q-pt-sm">
@@ -14,68 +9,34 @@
           </div>
         </div>
         <q-item class="q-mb-sm">
-          <q-input
-            v-model="search"
-            @input="filterTokens()"
-            outlined
-            round
-            placeholder="Search contract name or symbol"
-            class="col"
-          />
+          <q-input v-model="search" @input="filterTokens()" outlined round placeholder="Search contract name or symbol"
+            class="col" />
         </q-item>
         <div class="q-pl-md q-pb-sm q-pr-md">
-          <q-item-label
-            v-if="!addingToken"
-            class="addToken"
-            @click="addingToken = true"
-            >Want to list your token? Do it here.</q-item-label
-          >
+          <q-item-label v-if="!addingToken" class="addToken" @click="addingToken = true">Want to list your token? Do it
+            here.</q-item-label>
           <div v-if="addingToken" class="fit row">
-            <q-input
-              v-model="newTokenContract"
-              outlined
-              round
-              placeholder="Contract"
-              class="col q-pr-xs"
-            />
-            <q-input
-              v-model="newTokenSymbol"
-              outlined
-              round
-              placeholder="Symbol"
-              class="col-4 q-pr-xs"
-            />
+            <q-input v-model="newTokenContract" outlined round placeholder="Contract" class="col q-pr-xs" />
+            <q-input v-model="newTokenSymbol" outlined round placeholder="Symbol" class="col-4 q-pr-xs" />
 
             <div>
               <div class="fit column">
-                <q-btn
-                  no-caps
-                  size="sm"
-                  class="addBtn col q-mb-xs"
-                  label="Add"
-                  @click="
-                    updateAddNewToken({
-                      contract: newTokenContract,
-                      symbol: newTokenSymbol,
-                      accountName: accountName,
-                    });
-                    addingToken = false;
-                  "
-                />
-                <q-btn
-                  no-caps
-                  size="sm"
-                  class="addBtn col"
-                  label="Remove"
-                  @click="
-                    updateRemoveToken({
-                      contract: newTokenContract,
-                      symbol: newTokenSymbol,
-                      accountName: accountName,
-                    });
-                    addingToken = false;
-                  "
-                />
+                <q-btn no-caps size="sm" class="addBtn col q-mb-xs" label="Add" @click="
+                  updateAddNewToken({
+                    contract: newTokenContract,
+                    symbol: newTokenSymbol,
+                    accountName: accountName,
+                  });
+                addingToken = false;
+                " />
+                <q-btn no-caps size="sm" class="addBtn col" label="Remove" @click="
+                  updateRemoveToken({
+                    contract: newTokenContract,
+                    symbol: newTokenSymbol,
+                    accountName: accountName,
+                  });
+                addingToken = false;
+                " />
               </div>
             </div>
           </div>
@@ -83,13 +44,8 @@
         <q-separator />
       </div>
       <q-list class="dialogList">
-        <q-item
-          v-for="token in availableTokens"
-          :key="`${token.contract}-${token.symbol}`"
-          clickable
-          v-close-popup
-          @click="updateSelectedCoin(token)"
-        >
+        <q-item v-for="token in availableTokens" :key="`${token.contract}-${token.symbol}`" clickable v-close-popup
+          @click="updateSelectedCoin(token)">
           <q-item-section avatar>
             <token-avatar :token="token.symbol" :avatarSize="30" />
           </q-item-section>
@@ -124,7 +80,7 @@ export default {
   props: ["showCoinDialog", "isFrom", "isSwap", "antelope"],
   computed: {
     ...mapGetters("account", ["isAuthenticated", "accountName"]),
-    ...mapGetters("tport", ["getTPortTokens", "getTelosDTokens"]),
+    ...mapGetters("tport", ["getTPortTokens", "getTelosDTokens", "getStartBridgeTokens"]),
     ...mapGetters("blockchains", ["getAllPossibleChains", "getCurrentChain"]),
     ...mapGetters("bridge", [
       "getToChain",
@@ -138,7 +94,7 @@ export default {
         return this.filteredTokens;
       } else {
         // return this.getTPortTokens;
-        var tokens = [...this.getTPortTokens];
+        var tokens = [...this.getStartBridgeTokens, ...this.getTPortTokens];
         const telosDChains = ["TELOS", "EOS"];
         var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
         if (telosdTrx)
@@ -156,10 +112,12 @@ export default {
       "updateTportTokenBalances",
       "updateTportTokenBalancesEvm",
       "updateTelosDTokens",
-      "updateTelosDTokenBalances"
+      "updateTelosDTokenBalances",
+      "updateStartBridgeTokens",
+      "updateStartBridgeTokenBalances"
     ]),
     ...mapActions("bridge", ["updateBridgeToken"]),
-    ...mapActions("blockchains",["updateCurrentChain"]),
+    ...mapActions("blockchains", ["updateCurrentChain"]),
 
     updateSelectedCoin(token) {
       this.updateBridgeToken(token);
@@ -168,7 +126,7 @@ export default {
     filterTokens() {
       // TODO Show all when no input
       // console.log("Len: ", this.search.length);
-      var tokens = [...this.getTPortTokens];
+      var tokens = [...this.getStartBridgeTokens, ...this.getTPortTokens];
       const telosDChains = ["TELOS", "EOS"];
       var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
       if (telosdTrx)
@@ -191,16 +149,14 @@ export default {
     // console.log("mount start");
     const telosDChains = ["TELOS", "EOS"];
     var telosdTrx = telosDChains.includes(this.getFromChain.NETWORK_NAME) && telosDChains.includes(this.getToChain.NETWORK_NAME);
-    // await this.updatePools();
-    // await this.updateAllTokensBalances(this.accountName);
     if (this.antelope == null)
       this.antelope = false;
-    // console.log("Is Antelope:",this.antelope);
+    // console.log("Is Antelope:", this.antelope);
     if (this.antelope) {
       // console.log("update chain");
       await this.updateCurrentChain(this.getFromChain.NETWORK_NAME);
       await this.$store.$api.setAPI(this.$store);
-      await this.updateTPortTokens({contract:"bridge.start",chain:this.getToChain.NETWORK_NAME.toLowerCase()});
+      await this.updateStartBridgeTokens({ contract: "bridge.start", chain: this.getToChain.NETWORK_NAME.toLowerCase() });
       if (telosdTrx) {
         await this.updateTelosDTokens();
       }
@@ -212,7 +168,7 @@ export default {
       await this.updateTportTokenBalancesEvm()
     }
     else {
-      await this.updateTportTokenBalances();
+      await this.updateStartBridgeTokenBalances();
       if (telosdTrx)
         await this.updateTelosDTokenBalances();
     }
@@ -239,17 +195,14 @@ export default {
 
 .addBtn {
   color: white;
-  background-image: linear-gradient(
-    to right,
-    $purpleBright 20%,
-    $blueLight 80%
-  );
-  &:hover {
-    background-image: linear-gradient(
-      to left,
+  background-image: linear-gradient(to right,
       $purpleBright 20%,
-      $blueLight 80%
-    );
+      $blueLight 80%);
+
+  &:hover {
+    background-image: linear-gradient(to left,
+        $purpleBright 20%,
+        $blueLight 80%);
   }
 }
 </style>

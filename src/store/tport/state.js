@@ -3,6 +3,7 @@ export default {
   chainId: 3,
   tportTokens: [],
   telosDTokens: [],
+  startBridgeTokens: [],
   teleports: [],
   evmTransactions: [],
   evmTransactionsUpdating: true,

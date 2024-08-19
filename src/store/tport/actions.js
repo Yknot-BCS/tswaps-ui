@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 
 // Get evm bridge tokens from tokens table of tport.start
 export const updateTPortTokens = async function ({ commit, getters, rootGetters }, details) {
+  console.dir(details)
   commit("setTPortTokens", { tokens: [] });
   var contract = null;
   var chain = null;
@@ -49,7 +50,45 @@ export const updateTPortTokens = async function ({ commit, getters, rootGetters 
         tokens.push(asset);
       }
     }
+    console.log(tokens);
     commit("setTPortTokens", { tokens });
+  } catch (error) {
+    commit("general/setErrorMsg", error.message || error, { root: true });
+  }
+};
+
+export const updateStartBridgeTokens = async function ({ commit, getters, rootGetters }, details) {
+  var contract = "bridge.start";
+  var scope = null;
+  if (details) {
+    if (details.contract)
+      contract = details.contract;
+    if (details.chain)
+      scope = details.chain;
+  }
+  try {
+    let tokens = [];
+    const tableResults = await this.$api.getTableRows({
+      code: contract,
+      scope: scope,
+      table: "tokens",
+      limit: 10000,
+      reverse: false,
+      show_payer: false,
+    });
+    for (let asset of tableResults.rows) {
+      if ('token_info' in asset)
+        asset.token = asset.token_info;
+      asset = {
+        ...asset,
+        symbol: this.$getSymFromAsset(asset.token),
+        decimals: this.$getDecimalFromAsset(asset.token),
+        contract: asset.token.contract,
+        amount: 0,
+      };
+      tokens.push(asset);
+    }
+    commit("setStartBridgeTokens", { tokens });
   } catch (error) {
     commit("general/setErrorMsg", error.message || error, { root: true });
   }
@@ -57,12 +96,12 @@ export const updateTPortTokens = async function ({ commit, getters, rootGetters 
 
 export const updateTelosDTokens = async function ({ commit, getters }) {
   var contract = "telosd.io";
-  var chain = "telosd.io";
+  var scope = "telosd.io";
   try {
     let tokens = [];
     const tableResults = await this.$api.getTableRows({
       code: contract,
-      scope: chain,
+      scope: scope,
       table: "tokens",
       limit: 10000,
       reverse: false,
@@ -330,6 +369,52 @@ export const updateTelosDTokenBalances = async function ({
           }
         } catch (error) {
           commit("setTelosDTokenAmount", { token: token, amount: 0 });
+        }
+      }
+    }
+  } catch (error) {
+    console.log("Error getting chain token balance:", error);
+    commit("general/setErrorMsg", error.message || error, { root: true });
+  }
+};
+
+
+export const updateStartBridgeTokenBalances = async function ({
+  commit,
+  getters,
+  rootGetters,
+}) {
+  try {
+    var accountName = rootGetters["account/accountName"];
+    if (accountName !== null) {
+      let tokens = getters.getStartBridgeTokens;
+      const rpc = this.$api.getRpc();
+      for (const token of tokens) {
+        try {
+          let balance = (
+            await rpc.get_currency_balance(
+              token.contract,
+              accountName,
+              token.symbol
+            )
+          )[0];
+          if (balance !== undefined) {
+            let precision = this.$assetToPrecision(balance);
+            if (token.token.decimals === 0) {
+              commit("setTokenPrecision", {
+                token: token,
+                precision: precision,
+              });
+            }
+            commit("setStartBridgeTokenAmount", {
+              token: token,
+              amount: this.$assetToAmount(balance),
+            });
+          } else {
+            commit("setStartBridgeTokenAmount", { token: token, amount: 0 });
+          }
+        } catch (error) {
+          commit("setStartBridgeTokenAmount", { token: token, amount: 0 });
         }
       }
     }
