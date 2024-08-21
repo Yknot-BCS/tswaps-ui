@@ -1,10 +1,6 @@
 <template>
   <q-avatar :size="`${avatarSize}px`">
-    <q-spinner-puff
-      v-if="src === 'Loading'"
-      :style="avatarStyle"
-      color="primary"
-    />
+    <q-spinner-puff v-if="src === 'Loading'" :style="avatarStyle" color="primary" />
     <q-img v-else-if="src" :src="src" alt="Avatar" :style="avatarStyle">
       <template v-slot:error>
         <div class="transparent" style="padding: 0" v-html="identicon" />
@@ -57,41 +53,42 @@ export default {
         if (this.grayscale) {
           switch (token) {
             case "TELOS": return "/tokens/tlos.svg";
-            case "EOS"  : return "/tokens/eos.svg";
-            case "WAX"  : return "/tokens/wax.svg";
+            case "EOS": return "/tokens/eos.svg";
+            case "WAX": return "/tokens/wax.svg";
             default: return ""
           }
         } else {
           switch (token) {
-            case "BNB"  : return "/tokens/bnb.svg";
-            case "PETH"  : return "/tokens/peth.png"
-            case "PBTC"  : return "/tokens/pbtc.png";
-            case "PUSDT" : return "https://raw.githubusercontent.com/T-Starter/T-Starter-images/master/icons/pUSDT.png";
-            case "PUSDC" : return "https://raw.githubusercontent.com/T-Starter/T-Starter-images/master/icons/pUSDC.png";
-            case "USDT"  : return "/tokens/usdt.png";
-            case "START" : return "/tokens/start.png";
-            case "ZPTC" : return "/tokens/zptc.png";
-            case "SWAP" : return "/tokens/swap.png";
-            case "EOSDT"  : return "/tokens/eosdt.png";
-            case "VIGOR"  : return "/tokens/vigor.png";
-            case "TLOS"  : return "/tokens/tlos.png";
-            case "TELOS" : return "/tokens/tlos.png";
-            case "EOS"   : return "/tokens/eos.png";
-            case "WAX"   : return "/tokens/wax.png";
-            case "BSC"   : return "/tokens/bnb.svg";
-            case "TELOS EVM" : return "/tokens/telos_evm.png";
-            case "BTC": case "BITCOIN" : return "/tokens/bitcoin.svg";
-            case "ETH": case "ETHEREUM": case "ROPSTEN" : return "/tokens/eth.svg";
+            case "BNB": return "/tokens/bnb.svg";
+            case "PETH": return "/tokens/peth.png"
+            case "PBTC": return "/tokens/pbtc.png";
+            case "PUSDT": return "https://raw.githubusercontent.com/T-Starter/T-Starter-images/master/icons/pUSDT.png";
+            case "PUSDC": return "https://raw.githubusercontent.com/T-Starter/T-Starter-images/master/icons/pUSDC.png";
+            case "USDT": return "/tokens/usdt.png";
+            case "START": return "/tokens/start.png";
+            case "ZPTC": return "/tokens/zptc.png";
+            case "SWAP": return "/tokens/swap.png";
+            case "EOSDT": return "/tokens/eosdt.png";
+            case "VIGOR": return "/tokens/vigor.png";
+            case "TLOS": return "/tokens/tlos.png";
+            case "TELOS": return "/tokens/tlos.png";
+            case "EOS": return "/tokens/eos.png";
+            case "WAX": return "/tokens/wax.png";
+            case "BSC": return "/tokens/bnb.svg";
+            case "TELOS EVM": return "/tokens/telos_evm.png";
+            case "BENY": return "/tokens/beny.png";
+            case "BTC": case "BITCOIN": return "/tokens/bitcoin.svg";
+            case "ETH": case "ETHEREUM": case "ROPSTEN": return "/tokens/eth.svg";
             default:
               // Search logo in tokens
-                const tokenInfo = this.getTokens.find(
-                    (t) => t.symbol.toUpperCase() === token
-                );
-                if (tokenInfo) {
-                  return tokenInfo.logo;
-                } else {
-                  return "";
-                }
+              const tokenInfo = this.getTokens.find(
+                (t) => t.symbol.toUpperCase() === token
+              );
+              if (tokenInfo) {
+                return tokenInfo.logo;
+              } else {
+                return "";
+              }
           }
         }
       }
@@ -116,12 +113,11 @@ export default {
 .icon-placeholder {
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(
-    to left bottom,
-    $purpleBright 20%,
-    $blueLight 80%
-  );
+  background-image: linear-gradient(to left bottom,
+      $purpleBright 20%,
+      $blueLight 80%);
 }
+
 // body.body--light {
 //   .icon-placeholder {
 //     background-image: linear-gradient(
@@ -139,5 +135,4 @@ export default {
 //       $blueLight 100%
 //     );
 //   }
-// }
-</style>
+// }</style>
