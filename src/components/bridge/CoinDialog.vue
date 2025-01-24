@@ -163,6 +163,7 @@ export default {
     }
     else {
       await this.updateTPortTokens();
+      await this.updateTportTokenBalances();
     }
     if (!(["TELOS", "EOS", "WAX"].includes(this.getFromChain.NETWORK_NAME))) {
       await this.updateTportTokenBalancesEvm()
